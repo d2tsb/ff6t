@@ -3,20 +3,26 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <string>
 
 #define WRONGSIZE 48
 
-const double M_PI = atan(1)*4; 
-
+//#define M_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 
 bool IsPowerOfTwo(unsigned long x)
 {
     return (x != 0) && ((x & (x - 1)) == 0);
 }
-constexpr std::complex<double> k_nth_root(unsigned k, unsigned n)
+//constexpr
+std::complex<double> k_nth_root(unsigned k, unsigned n)
 {
     return std::exp((std::complex<double>(-2.0*k*M_PI/n) * std::complex<double>(0, 1)) );
 
+}
+
+std::string complex2string(std::complex<double> n)
+{
+    return std::to_string( n.real()) + " + " + std::to_string(n.imag()) + "j";
 }
 
 namespace cooleytukey
@@ -30,9 +36,21 @@ namespace cooleytukey
         if (ispow2)
         {
             std::vector<std::complex<double>> c; 
-            std::copy_n(r.begin(), r.size(), c.begin());
+            c.reserve(r.size());
+            for (unsigned i = 0; i < r.size(); i++)
+            {
+                c.push_back(std::complex<double>(r[i]));
+                //std::cout << c[i] << "," ;
+                //std::cout << complex2string(c[i]) << ","; 
+            }
+            std::complex<double> * result = fftrecursive(c.data(), c.size());
+            for (unsigned i = 0; i < c.size(); i++)
+            {
+                std::cout << c[i] << "," ;
+            }
 
 
+            
         }
         else {
 
@@ -80,6 +98,7 @@ namespace cooleytukey
                 }
                 delete [] processed_even;
                 delete [] processed_odd;
+                //delete [] r;
 
                 return c; 
 
