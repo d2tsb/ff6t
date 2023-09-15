@@ -1,11 +1,35 @@
 
 #include "../cpufft.h"
+#include <cstdlib>
+#include <ctime>
+
 
 using namespace cooleytukey;
 void execute_fft()
+#define ORDER 20
+
 {
 
-    fft(std::vector<double> ({4,3,2,4})); 
+    std::srand(std::time(0));
+    std::vector< double > v; 
+    v.reserve(1<<ORDER);
+    for ( unsigned i = 0; i < 1 << ORDER; i++)
+    {
+        v.push_back(std::rand()%10000);
+    }
+    
+    
+    /*
+
+    v.resize(1<< ORDER);
+     for (std::vector<double>::iterator it = v.begin(); it != v.end(); ++it)
+    {
+       *it = rand();
+    }
+    
+    
+    */
+    fft(v); 
 
 }
 
