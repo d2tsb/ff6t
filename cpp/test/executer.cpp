@@ -6,7 +6,7 @@
 
 using namespace cooleytukey;
 void execute_fft()
-#define ORDER 20
+#define ORDER 5
 
 {
 
@@ -29,8 +29,14 @@ void execute_fft()
     
     
     */
-    fft(v); 
-
+    //std::cout << fft(v).size(); 
+    std::vector<std::complex<double>> cv = fft(v);
+       for (unsigned i = 0; i < 10; i++)
+            {
+                std::cout << cv[i] << "," ;
+            }
+    std::cout << "fft done" << std::endl;
+    cooleytukey::ifft(cv);
 }
 
 int main()
