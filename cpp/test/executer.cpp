@@ -10,14 +10,16 @@ void execute_fft()
 {
 
     std::srand(std::time(0));
-    std::vector< double > v({ 1, 1 }); 
+    //std::vector< double > v({ 1, 1 }); 
+    std::vector< double > v; 
 
 
+    //std::vector< double > v({ 1, 2, 3, 4, 5, 6, 7, 8 }); 
 
-    // for ( unsigned i = 0; i < 1 << ORDER; i++)
-    // {
-    //     v.push_back(std::rand()%10000);
-    // }
+    for ( unsigned i = 0; i < 1 << ORDER; i++)
+    {
+        v.push_back(std::rand()%10000);
+    }
     
     
     /*

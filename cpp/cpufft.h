@@ -6,7 +6,7 @@
 #include <string>
 
 #define WRONGSIZE 48
-#define ORDER 1
+#define ORDER 17
 #define STATEMENT ((unsigned)((1 << ORDER) > 10) ? (10) : (1 << ORDER))
 
 //#define M_PIO 3.141592653589793238462643383yyp2795028841971693993751058209749445923078164062862089986280348253421170679
@@ -61,17 +61,17 @@ namespace cooleytukey
                 const unsigned n = size; 
                 const unsigned n_half = size>>1; 
 
-                for (unsigned i = 0; i < n; i++)
-                    {
-                        std::cout << r[i] << "," ;
+                // for (unsigned i = 0; i < n; i++)
+                //     {
+                //         std::cout << r[i] << "," ;
         
-                        }
+                //         }
                      
 
 
 
-                std::complex<double> * even_indices = new std::complex<double>[n_half];
-                std::complex<double> * odd_indices = new std::complex<double>[n_half];
+                std::complex<double> even_indices[n_half];
+                std::complex<double> odd_indices[n_half];
 
                 for (unsigned i = 0; i < n_half; i++)
                 {
@@ -82,8 +82,8 @@ namespace cooleytukey
                 std::complex<double> * processed_even = fftrecursive(even_indices, n_half);
                 std::complex<double> * processed_odd = fftrecursive(odd_indices, n_half);
 
-                delete [] even_indices;
-                delete [] odd_indices;
+                // delete [] even_indices;
+                // delete [] odd_indices;
 
                 std::complex<double> * c = new std::complex<double>[n];
                 auto knr = k_nth_root(1, n);
@@ -118,8 +118,8 @@ namespace cooleytukey
                 const unsigned n = size; 
                 const unsigned n_half = size>>1; 
  
-                std::complex<double> * even_indices = new std::complex<double>[n_half];
-                std::complex<double> * odd_indices = new std::complex<double>[n_half];
+                std::complex<double> even_indices[n_half];
+                std::complex<double> odd_indices[n_half];
 
                 for (unsigned i = 0; i < n_half; i++)
                 {
@@ -130,17 +130,16 @@ namespace cooleytukey
                 std::complex<double> * const processed_even = ifftrecursive(even_indices, n_half);
                 std::complex<double> * const processed_odd = ifftrecursive(odd_indices, n_half);
 
-                delete [] even_indices;
-                delete [] odd_indices;
+                // delete [] even_indices;
+                // delete [] odd_indices;
 
                 std::complex<double> * const c = new std::complex<double>[n];
-                std::complex<double> quotient(n, 0);
-                auto knr = inverse_k_nth_root(1, n);
                 std::complex<double> ur(1, 0);
+                auto knr = inverse_k_nth_root(1, n);
                 for ( unsigned i = 0; i < n_half; i++)
                 {
-                    c[i] = (processed_even[i] + (processed_odd[i] * ur))/quotient;
-                    c[i+n_half] = (processed_even[i] - (processed_odd[i] * ur))/quotient;
+                    c[i] = (processed_even[i] + (processed_odd[i] * ur));
+                    c[i+n_half] = (processed_even[i] - (processed_odd[i] * ur));
                     ur *= knr; 
                 }
                 delete [] processed_even;
@@ -204,13 +203,19 @@ namespace cooleytukey
         bool ispow2 = IsPowerOfTwo(r.size());
         if (ispow2)
         {
-           std::complex<double> * result = ifftrecursive(r.data(), r.size());
+            std::complex<double> * result = ifftrecursive(r.data(), r.size());
+
+            std::complex<double> quotient(r.size(), 0);
+            for ( unsigned i = 0; i < r.size(); i++)
+                {
+                    result[i] /= quotient; 
+                }
 
             for (unsigned i = 0; i < STATEMENT; i++)
-            {
-                std::cout << result[i] << "," ;
-            }
-
+                {
+                    std::cout << result[i] << "," ;
+                }
+    
 
             
         }
