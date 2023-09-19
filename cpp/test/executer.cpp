@@ -6,17 +6,18 @@
 
 using namespace cooleytukey;
 void execute_fft()
-#define ORDER 5
 
 {
 
     std::srand(std::time(0));
-    std::vector< double > v; 
-    v.reserve(1<<ORDER);
-    for ( unsigned i = 0; i < 1 << ORDER; i++)
-    {
-        v.push_back(std::rand()%10000);
-    }
+    std::vector< double > v({ 1, 1 }); 
+
+
+
+    // for ( unsigned i = 0; i < 1 << ORDER; i++)
+    // {
+    //     v.push_back(std::rand()%10000);
+    // }
     
     
     /*
@@ -29,14 +30,21 @@ void execute_fft()
     
     
     */
-    //std::cout << fft(v).size(); 
+    //std::cout << fft(v).size(); o
+
+
+
+
     std::vector<std::complex<double>> cv = fft(v);
-       for (unsigned i = 0; i < 10; i++)
-            {
-                std::cout << cv[i] << "," ;
-            }
-    std::cout << "fft done" << std::endl;
+        for (unsigned i = 0; i < STATEMENT; i++)
+                {
+                    std::cout << cv[i] << "," ;
+                }
+        std::cout << "fft done" << std::endl;
     cooleytukey::ifft(cv);
+        
+    
+   //std::cout << "Statement: " << STATEMENT; 
 }
 
 int main()
