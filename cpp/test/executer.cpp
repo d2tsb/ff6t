@@ -44,16 +44,16 @@ class Stopwatch
 
 void execute_vec_cooleytuckey_fft()
 {
-
+    std::cout << "Test of (recursive) cooleytuckey::recursive::vec(tor)::fft/ifft" << std::endl;
     std::srand(std::time(0));
     //std::vector< double > v({ 1, 1 }); 
-    std::vector< double > v; 
-    //std::vector< double > v({ 1, 2, 3, 4, 5, 6, 7, 8 }); 
+    //std::vector< double > v; 
+    std::vector< double > v({ 1, 2, 3, 4, 5, 6, 7, 8 }); 
 
-    for ( unsigned i = 0; i < 1 << ORDER; i++)
-    {
-        v.push_back(std::rand()%10000);
-    }
+    // for ( unsigned i = 0; i < 1 << ORDER; i++)
+    // {
+    //     v.push_back(std::rand()%10000);
+    // }
     
     
     /*
@@ -67,22 +67,23 @@ void execute_vec_cooleytuckey_fft()
     
     */
     //std::cout << fft(v).size(); o
-    std::vector<std::complex<double>> cv = cooleytukey::vec::fft(v);
+    std::vector<std::complex<double>> cv = cooleytukey::recursive::vec::fft(v);
         for (unsigned i = 0; i < STATEMENT; i++)
                 {
                     std::cout << cv[i] << "," ;
                 }
         std::cout << "fft done" << std::endl;
-    cooleytukey::vec::ifft(cv);
+    cooleytukey::recursive::vec::ifft(cv);
         
+    std::cout << std::endl; 
     
    //std::cout << "Statement: " << STATEMENT; 
 }
 
-
 void execute_arr_cooleytuckey_fft()
 {
 
+    std::cout << "Test of (recursive) cooleytuckey::recursive::arr(std::array)::fft/ifft" << std::endl;
     std::srand(std::time(0));
     //std::vector< double > v({ 1, 1 }); 
     std::array< double, 1 << ORDER> v; 
@@ -105,13 +106,13 @@ void execute_arr_cooleytuckey_fft()
     
     */
     //std::cout << fft(v).size(); o
-    std::array<std::complex<double>, 1 << ORDER> cv = cooleytukey::arr::fft(v);
+    std::array<std::complex<double>, 1 << ORDER> cv = cooleytukey::recursive::arr::fft(v);
         for (unsigned i = 0; i < STATEMENT; i++)
                 {
                     std::cout << cv[i] << "," ;
                 }
         std::cout << "fft done" << std::endl;
-    cooleytukey::arr::ifft(cv);
+    cooleytukey::recursive::arr::ifft(cv);
         
     std::cout << "ifft done\n";
     
@@ -119,21 +120,43 @@ void execute_arr_cooleytuckey_fft()
 }
 
 
+void execute_vec_cooleytuckey_fft_iterative()
+{
+    std::cout << "Test of (iterative) cooleytuckey::iterative::vec(std::vector)::fft/ifft" << std::endl;
+    /*
+    std::cout << "sizeof(unsinged):" << sizeof(unsigned) << std::endl; 
+    std::cout << "bitinverse of 0:" << inverse(0, 4) << std::endl;
+    std::cout << int_as_string(inverse(0,4)) << std::endl; 
+    std::cout << int_as_string(7) << std::endl; 
+    std::cout << int_as_string(8) << std::endl; 
+    std::cout << int_as_string(inverse(8,4)) << std::endl; 
+    */
+    //std::vector<double> v({1,1});
+    std::vector<double> v({1,2,3,4,5,6,7,8});
+    auto r = cooleytukey::iterative::vec::fft(v);
+    for (unsigned i = 0; i < 8; i++) 
+    {
+        std::cout << r[i] << ","; 
+    }
+    std::cout << "fft done\n";
+}
+
+
+
 int main()
 {
-    Stopwatch sw; 
-    sw.start();
-    execute_arr_cooleytuckey_fft();
-    sw.finish();
-    sw.print_duration_in_milliseconds(); 
+    // Stopwatch sw; 
+    // sw.start();
+    //execute_arr_cooleytuckey_fft();
+    // sw.finish();
+    // sw.print_duration_in_milliseconds(); 
 
-    sw.reset(); 
-    sw.start();
+    // sw.reset(); 
+    // sw.start();
     execute_vec_cooleytuckey_fft();
-    sw.finish();
-    sw.print_duration_in_milliseconds(); 
-
-
+    // sw.finish();
+    // sw.print_duration_in_milliseconds(); 
+    execute_vec_cooleytuckey_fft_iterative();
     
 }
 

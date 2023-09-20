@@ -7,13 +7,23 @@
 #include <string>
 
 #define WRONGSIZE 48
-#define ORDER 12
+#define ORDER 3
 #define STATEMENT ((unsigned)((1 << ORDER) > 10) ? (10) : (1 << ORDER))
 
 //#define M_PIO 3.141592653589793238462643383yyp2795028841971693993751058209749445923078164062862089986280348253421170679
 #define M_PIO (double) 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 #define PREFACTOR 2.0
 
+std::vector<std::complex<double>> double_to_complex_conversion(std::vector<double> r)
+{ //without iterator
+        std::vector<std::complex<double>> c; 
+                        for ( unsigned i = 0; i < r.size(); i++)
+                        {
+                            c.push_back(std::complex<double>(r[i]));
+                        }
+        return c; 
+
+}
 bool IsPowerOfTwo(unsigned long x)
 {
     return (x != 0) && ((x & (x - 1)) == 0);
@@ -35,9 +45,27 @@ std::string complex2string(std::complex<double> n)
     return std::to_string( n.real()) + " + " + std::to_string(n.imag()) + "j";
 }
 
-namespace cooleytukey 
+unsigned inverse(const unsigned i, short order = ORDER)
 {
+    return (((~i) << ((sizeof(unsigned) << 3) - order)) >> ((sizeof(unsigned) * 8) - order));
+}
+std::string int_as_string(unsigned i)
+{
+    std::string outcome; 
+    long j = ((sizeof(unsigned) << 3) - 1);
+    for ( ; j >= 0; j--)
+    {
+        outcome += std::to_string((bool)(i & (1 << j)));
+    }
+    //std::cout<< "leaving";
+    return outcome; 
 
+}
+
+namespace cooleytukey 
+    {
+    namespace recursive
+    {
     namespace vec 
     {
 
@@ -423,5 +451,76 @@ namespace cooleytukey
     }
 
 
+    }
+        }
+
+
+
+
+
+
+
+    namespace iterative
+
+    {
+
+        namespace vec
+        {
+            std::vector < std::complex<double> > fft 
+            (std::vector<double> c)
+            {
+                if ( IsPowerOfTwo(c.size()))
+                {
+                    unsigned o = std::log2(c.size());
+                    //conversion to complex<double> array
+                    std::vector<std::complex<double>> r; 
+                    for ( unsigned i = 0; i < c.size(); i++)
+                    {
+                        r.push_back(std::complex<double>(c[inverse(i, o)])); //fed with bitinverse index
+                        //r.push_back(std::complex<double>(c[i])); //fed with bitinverse index
+                    }
+                    // for ( unsigned i = 0; i < r.size(); i++)
+                    //     std::cout << r[i] << ","; 
+                    // std::cout << std::endl;
+
+                    //perform iterative fft
+                    unsigned N_SIZE = c.size(); 
+                    unsigned Partitionsize = 2;
+                    for (unsigned i = 0; i < o; i++)
+                    {
+                        for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
+                            {
+                                std::complex<double> ur = k_nth_root(1,Partitionsize);
+                                std::complex<double> multiplier(1,0); 
+                                //extract uneven and even
+                                std::complex<double> Even[Partitionsize/2];
+                                std::complex<double> Uneven[Partitionsize/2];
+                                for (unsigned k=0; k<Partitionsize/2; k++)
+                                {
+                                    Even[k] = r[2*k+Partition];
+                                    Uneven[k] = r[2*k+ Partition + 1];
+                                }
+                                for(unsigned k=0; k<Partitionsize/2; k++) 
+                                {
+                                    r[k+Partition] = Even[k] + Uneven[k]*multiplier;  
+                                    r[k+Partition+Partitionsize/2] = Even[k] - Uneven[k]*multiplier; 
+                                    multiplier *= ur; 
+                                    
+                                }
+                            }
+                                                            
+                        Partitionsize<<=1;
+                    }
+                    return r; 
+
+                }
+                else {
+                    throw WRONGSIZE; 
+                }
+                
+
+            }
+
+        }
     }
 }
