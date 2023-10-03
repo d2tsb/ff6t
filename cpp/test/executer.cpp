@@ -134,11 +134,78 @@ void execute_vec_cooleytuckey_fft_iterative()
     //std::vector<double> v({1,1});
     std::vector<double> v({1,2,3,4,5,6,7,8});
     auto r = cooleytukey::iterative::vec::fft(v);
-    for (unsigned i = 0; i < 8; i++) 
+    for (unsigned i = 0; i < (1 << ORDER); i++) 
     {
         std::cout << r[i] << ","; 
     }
+
+
     std::cout << "fft done\n";
+
+    auto inverted = cooleytukey::iterative::vec::ifft(r);
+
+    for (unsigned i = 0; i < (1 << ORDER); i++) 
+    {
+        std::cout << inverted[i] << ","; 
+    }
+
+
+}
+
+void execute_convolution_recursive_multiplication_via_fft()
+{
+   std::cout << "first example" << std::endl;
+   cooleytukey::convolution_recursive::multiplication_via_fft(
+    std::vector<double>({  1, 2, 0, 0, 0, 0, 0, 0}),
+    //  std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8}),
+    // std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8})
+    std::vector<double>({  1, 2, 0, 0, 0, 0, 0, 0})
+   );
+   std::cout << std::endl;
+   std::cout << "second example" << std::endl;
+    cooleytukey::convolution_recursive::multiplication_via_fft(
+    std::vector<double>({  1, 2, 3, 4, 0, 0, 0, 0}),
+    //  std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8}),
+    // std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8})
+    std::vector<double>({  5, 6, 7, 8, 0, 0, 0, 0})
+   );
+
+   std::cout << std::endl;
+   std::cout << "third example" << std::endl;
+    cooleytukey::convolution_recursive::multiplication_via_fft(
+    std::vector<double>({  1, 7, 0, 0, 0, 0, 0, 0}),
+    //  std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8}),
+    // std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8})
+    std::vector<double>({  1, 7, 0, 0, 0, 0, 0, 0})
+   );
+
+
+
+}
+
+void testinverse(unsigned order = 4)
+{
+
+
+    std::vector<int> ordered = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 27000};
+    std::cout << "print ordered elements:" << " (order of "<< order << ")" << std::endl;
+    for ( auto element : ordered)
+        std::cout << element << ",";
+
+    std::vector<int> bitinserse_indices;
+    for ( int i = 0; i < ordered.size(); i++)
+    {
+        //being pedantic
+        bitinserse_indices.push_back(   inverse(ordered[i], order));
+    }
+    std::cout << std::endl; 
+    std::cout << "print bitinversed elements:" << std::endl;
+    for ( auto element : bitinserse_indices)
+        std::cout << element << ",";
+
+    std::cout << std::endl; 
+
+    
 }
 
 
@@ -147,16 +214,18 @@ int main()
 {
     // Stopwatch sw; 
     // sw.start();
-    //execute_arr_cooleytuckey_fft();
+    // execute_arr_cooleytuckey_fft();
     // sw.finish();
     // sw.print_duration_in_milliseconds(); 
 
     // sw.reset(); 
     // sw.start();
-    execute_vec_cooleytuckey_fft();
+    // execute_vec_cooleytuckey_fft();
     // sw.finish();
     // sw.print_duration_in_milliseconds(); 
-    execute_vec_cooleytuckey_fft_iterative();
+    //testinverse(2);
+    execute_convolution_recursive_multiplication_via_fft(); 
+    //execute_vec_cooleytuckey_fft_iterative();
     
 }
 

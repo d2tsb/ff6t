@@ -58,6 +58,8 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "files.associations": {
-    "complex": "cpp"
-  }
+    "complex": "cpp",
+    "ostream": "cpp"
+  },
+  "C_Cpp.default.compilerPath": "cl.exe"
 }
