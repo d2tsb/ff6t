@@ -1,2 +1,4 @@
-#pragma once
-#include "defines.h"
+
+#include "cooleytukeyrec.h"
+#include "itercooleytukey.h"
+#include "modcooleytukey.h"

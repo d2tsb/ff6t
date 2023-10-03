@@ -1,5 +1,5 @@
 
-#include "../cpufft.h"
+#include "../cpufft/cpufft.h"
 #include <cstdlib>
 #include <ctime>
 #include <chrono>

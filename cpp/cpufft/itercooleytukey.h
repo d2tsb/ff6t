@@ -1,7 +1,7 @@
-#pragma once
 #include "defines.h"
 
- namespace iterative
+namespace cooleytukey{
+    namespace iterative
 
     {
 
@@ -123,3 +123,4 @@
 
 
     }
+}

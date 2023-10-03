@@ -1,4 +1,3 @@
-#pragma once
 #include <iostream>
 #include <complex>
 #include <vector>
@@ -8,6 +7,7 @@
 #include <string>
 #include <climits>
 
+#pragma once
 #define WRONGSIZE 48
 #define SIZENOTMATCH 44
 #define ORDER 3

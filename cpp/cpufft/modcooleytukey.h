@@ -1,57 +1,10 @@
 
-#include "cooleytuckey.h"
 #include "defines.h"
 namespace cooleytukey 
     {
   
-    namespace convolution_recursive
-    {
-        std::vector <std::complex<double>> multiplication_via_fft(std::vector<double> a, 
-                std::vector<double> b)
-        {
 
-            if ( a.size() != b.size() )
-            {
-                throw SIZENOTMATCH; 
-            }
-
-            if ( IsPowerOfTwo(a.size())
-                && IsPowerOfTwo(b.size()) 
-            )
-            {
-                try
-                {
-                    auto a_coeff = recursive::vec::fft(a);
-                    auto b_coeff = recursive::vec::fft(b);
-                    for ( unsigned i = 0; i < a_coeff.size(); i++)
-                        {
-                            a_coeff[i] *= b_coeff[i];
-                        }
-
-                    std::vector <std::complex<double>> c_ifft = recursive::vec::ifft(a_coeff);
-
-                    return c_ifft;
-                    }
-
-                catch(const std::exception& e)
-                {
-                    std::cerr << e.what() << '\n';
-                }
-                
-                
-
-
-
-
-            }
-            else {
-                        throw WRONGSIZE; 
-                    }
-        }
-
-
-    }
-    namespace modrecursive337
+   namespace modrecursive337
     {
         //works for only 4 digits padded with 4 zeros   with first primenumber after 4*base(10)==9
         //8 the resulting inputlength is invertable

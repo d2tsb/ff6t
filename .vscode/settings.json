@@ -61,5 +61,5 @@
     "complex": "cpp",
     "ostream": "cpp"
   },
-  "C_Cpp.default.compilerPath": "cl.exe"
+  "C_Cpp.default.compilerPath": "D:\\MinGW\\bin\\g++.exe"
 }
