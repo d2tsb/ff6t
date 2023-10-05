@@ -194,6 +194,170 @@ namespace cooleytukey{
         }
 
 
+        namespace farr
+        {
+            //full array ( operations on malloc )
+            std::complex<double> * fft 
+            (std::complex<double> * c, const unsigned N_SIZE)
+            {
+                if ( IsPowerOfTwo(N_SIZE))
+                {
+                    unsigned o = std::log2(N_SIZE);
+                    //conversion to complex<double> array
+                    std::complex<double> * r = new std::complex<double>[N_SIZE]; 
+                    for ( unsigned i = 0; i < N_SIZE; i++)
+                    {
+                        r[i] = c[bitreverse(i, o)]; //fed with bitinverse index
+                        //r.push_back(std::complex<double>(c[i])); //fed with bitinverse index
+                    }
+                    // for ( unsigned i = 0; i < r.size(); i++)
+                    //     std::cout << r[i] << ","; 
+                    // std::cout << std::endl;
 
-    }
+                    //perform iterative fft
+                    unsigned Partitionsize = 2; //2
+                    for (unsigned i = 0; i < o; i++)
+                    {
+                        std::complex<double> ur = k_nth_root(1,Partitionsize);
+                        for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
+                            {
+                                std::complex<double> multiplier(1,0); 
+                                //extract uneven and even
+                                for(unsigned k=0; k<Partitionsize/2; k++)  //2
+                                {
+
+                                    std::complex<double> t = multiplier * r[Partition + k + Partitionsize/2];
+                                    std::complex<double> u = r[Partition + k];
+                                    r[k+Partition] = u + t;  
+                                    r[k+Partition+Partitionsize/2] = u - t; 
+                                    multiplier *= ur; 
+                                    
+                                }
+                            }
+                                                            
+                        Partitionsize<<=1;
+                    }
+                    delete [] c; 
+                    return r; 
+
+                }
+                else {
+                    throw WRONGSIZE; 
+                }
+                
+
+            }
+
+        std::complex<double> * ifft
+                (std::complex<double> * c, unsigned N_SIZE)
+                {
+                    if ( IsPowerOfTwo(N_SIZE))
+                    {
+                        unsigned o = std::log2(N_SIZE); //calculate the order
+                        //conversion to complex<double> array
+                        std::complex<double> * r = new std::complex<double>[N_SIZE];  
+                        for ( unsigned i = 0; i < N_SIZE; ++i)
+                        {
+                            r[i] = c[bitreverse(i, o)]; //fed with bitinverse index
+                        }
+                                         //perform iterative fft
+                        delete [] c;
+                        unsigned Partitionsize = 2; //2
+                        for (unsigned i = 0; i < o; i++)
+                        {
+
+                            std::complex<double> ur = inverse_k_nth_root(1,Partitionsize);
+                                for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
+                                    {
+                                        std::complex<double> multiplier(1,0);  //twiddle
+                                        //extract uneven and even
+                                        for(unsigned k=0; k<Partitionsize/2; ++k)  //2
+                                        {
+
+                                            std::complex<double> t = multiplier * r[Partition + k + Partitionsize/2];
+                                            std::complex<double> u = r[Partition + k];
+                                            r[k+Partition] = u + t;  
+                                            r[k+Partition+Partitionsize/2] = u - t; 
+                                            multiplier *= ur; 
+                                            
+                                        }
+                                    }
+                                                                        
+                            Partitionsize<<=1;
+                        }
+
+
+                        for (unsigned i = 0; i < N_SIZE; i++)
+                        {
+                            r[i] /= N_SIZE; 
+                        }
+                        return r;
+                    }
+                    else {
+                        throw WRONGSIZE; 
+                    }
+                    
+
+            }
+
+
+            void benchmark (const unsigned order) 
+            {
+
+                    std::cout << std::endl; 
+
+                    std::complex<double> *v = new std::complex<double>[1 << order];
+                    std::complex<double> *original = new std::complex<double>[1 << order];
+                    for ( unsigned i = 0; i < 1 << order; i++)
+                    {
+                        v[i] = (std::rand()%10000);
+                        original[i] = v[i];
+                    }
+                    //std::copy(&v[0], &v[1<<order], back_inserter(values));
+                    std::cout << "benchmark for ..iterative::farr::fft: " << std::endl;
+
+
+                    Stopwatch sw; 
+                    sw.reset(); 
+                    sw.start(); 
+                    v = cooleytukey::iterative::farr::fft(v, 1 << order);
+                    sw.finish(); 
+                    std::cout << "\telapsed time for cooleytukey::iterative::farr::fft with " << (1 << order) << " elements: "; 
+                    sw.print_duration_in_milliseconds(); 
+                    std::cout << std::endl; 
+
+
+                    sw.reset(); 
+                    sw.start(); 
+                    v = cooleytukey::iterative::farr::ifft(v, 1 << order);
+                    sw.finish(); 
+                    std::cout << "\telapsed time for cooleytukey::iterative::farr::ifft with " << (1 << order) << " elements: "; 
+                    sw.print_duration_in_milliseconds(); 
+                    std::cout << std::endl; 
+
+                    std::cout << "\tcomparing some elements: " << std::endl << "\t\toriginal sample: "; 
+
+                    for ( unsigned i = 0; i < 4; ++i)
+                    {
+                        std::cout << original[i] << ",";
+                    }
+                    std::cout << std::endl; 
+                    
+                    std::cout << "\tcomparing some elements: " << std::endl << "\t\tifft sample: "; 
+
+                    for ( unsigned i = 0; i < 4; ++i)
+                    {
+                        std::cout << v[i] << ",";
+                    }
+                    std::cout << std::endl; 
+                    
+            }
+
+
+
+
+
+
+
+    }}
 }
