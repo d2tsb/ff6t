@@ -1,14 +1,4 @@
-#include <iostream>
-#include <complex>
-#include <vector>
-#include <cmath>
-#include <algorithm>
-#include <array>
-#include <string>
-#include <climits>
-#include <cstdlib>
-#include <ctime>
-#include <chrono>
+#include "stopwatch.h"
 
 #pragma once
 #define WRONGSIZE 48

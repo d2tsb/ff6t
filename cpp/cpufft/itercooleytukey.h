@@ -47,9 +47,9 @@ namespace cooleytukey{
                         r.push_back(std::complex<double>(c[bitreverse(i, o)])); //fed with bitinverse index
                         //r.push_back(std::complex<double>(c[i])); //fed with bitinverse index
                     }
-                    for ( unsigned i = 0; i < r.size(); i++)
-                        std::cout << r[i] << ","; 
-                    std::cout << std::endl;
+                    // for ( unsigned i = 0; i < r.size(); i++)
+                    //     std::cout << r[i] << ","; 
+                    // std::cout << std::endl;
 
                     //perform iterative fft
                     unsigned N_SIZE = c.size(); 
@@ -61,17 +61,13 @@ namespace cooleytukey{
                             {
                                 std::complex<double> multiplier(1,0); 
                                 //extract uneven and even
-                                std::complex<double> Even[Partitionsize/2]; //2
-                                std::complex<double> Uneven[Partitionsize/2]; //2
-                                for (unsigned k=0; k<Partitionsize/2; k++)  //2
-                                {
-                                    Even[k] = r[2*k+Partition];
-                                    Uneven[k] = r[2*k+ Partition + 1];
-                                }
                                 for(unsigned k=0; k<Partitionsize/2; k++)  //2
                                 {
-                                    r[k+Partition] = Even[k] + Uneven[k]*multiplier;  
-                                    r[k+Partition+Partitionsize/2] = Even[k] - Uneven[k]*multiplier; 
+
+                                    std::complex<double> t = multiplier * r[Partition + k + Partitionsize/2];
+                                    std::complex<double> u = r[Partition + k];
+                                    r[k+Partition] = u + t;  
+                                    r[k+Partition+Partitionsize/2] = u - t; 
                                     multiplier *= ur; 
                                     
                                 }
@@ -99,42 +95,38 @@ namespace cooleytukey{
                         std::vector<std::complex<double>> r; 
                         for ( unsigned i = 0; i < c.size(); i++)
                         {
-                            //r.push_back(std::complex<double>(c[bitinverse(i, o)])); //fed with bitinverse index
-                            r.push_back(std::complex<double>(c[i])); //fed with bitinverse index
+                            r.push_back(std::complex<double>(c[bitreverse(i, o)])); //fed with bitinverse index
                         }
                                          //perform iterative fft
                         unsigned N_SIZE = c.size(); 
                         unsigned Partitionsize = 2; //2
                         for (unsigned i = 0; i < o; i++)
                         {
-                            for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
-                                {
-                                    std::complex<double> ur = inverse_k_nth_root(1,Partitionsize);
-                                    std::complex<double> multiplier(1,0); 
-                                    //extract uneven and even
-                                    std::complex<double> Even[Partitionsize/2]; //2
-                                    std::complex<double> Uneven[Partitionsize/2]; //2
-                                    for (unsigned k=0; k<Partitionsize/2; k++)  //2
+
+                            std::complex<double> ur = inverse_k_nth_root(1,Partitionsize);
+                                for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
                                     {
-                                        Even[k] = r[2*k+Partition];
-                                        Uneven[k] = r[2*k+ Partition + 1];
+                                        std::complex<double> multiplier(1,0);  //twiddle
+                                        //extract uneven and even
+                                        for(unsigned k=0; k<Partitionsize/2; ++k)  //2
+                                        {
+
+                                            std::complex<double> t = multiplier * r[Partition + k + Partitionsize/2];
+                                            std::complex<double> u = r[Partition + k];
+                                            r[k+Partition] = u + t;  
+                                            r[k+Partition+Partitionsize/2] = u - t; 
+                                            multiplier *= ur; 
+                                            
+                                        }
                                     }
-                                    for(unsigned k=0; k<Partitionsize/2; k++)  //2
-                                    {
-                                        r[k+Partition] = Even[k] + Uneven[k]*multiplier;  
-                                        r[k+Partition+Partitionsize/2] = Even[k] - (Uneven[k]*multiplier); 
-                                        multiplier *= ur; 
-                                        
-                                    }
-                                }
-                                                                
+                                                                        
                             Partitionsize<<=1;
                         }
 
 
                         for (unsigned i = 0; i < r.size(); i++)
                         {
-                            r[i] /= r.size(); 
+                            r[i] /= N_SIZE; 
                         }
 
                         return r; 
@@ -146,7 +138,61 @@ namespace cooleytukey{
                     
 
             }
+
+            void benchmark (const unsigned order) 
+            {
+
+                    double *v = new double[1 << order];
+                    for ( unsigned i = 0; i < 1 << order; i++)
+                    {
+                        v[i] = (std::rand()%10000);
+                    }
+                    std::vector<double> values; 
+                    values.insert(values.end(), &v[0], &v[1 << order]);
+                    //std::copy(&v[0], &v[1<<order], back_inserter(values));
+                    std::cout << "benchmark for ..iterative::vec::fft: " << std::endl;
+
+
+                    Stopwatch sw; 
+                    sw.reset(); 
+                    sw.start(); 
+                    std::vector<std::complex<double>> twiddles = cooleytukey::iterative::vec::fft(values);
+                    sw.finish(); 
+                    std::cout << "\telapsed time for cooleytukey::iterative::vec::fft with " << (1 << order) << " elements: "; 
+                    sw.print_duration_in_milliseconds(); 
+                    std::cout << std::endl; 
+
+
+                    sw.reset(); 
+                    sw.start(); 
+                    std::vector<std::complex<double>> results = cooleytukey::iterative::vec::ifft(twiddles);
+                    sw.finish(); 
+                    std::cout << "\telapsed time for cooleytukey::iterative::vec::ifft with " << (1 << order) << " elements: "; 
+                    sw.print_duration_in_milliseconds(); 
+                    std::cout << std::endl; 
+
+                    std::cout << "\tcomparing some elements: " << std::endl << "\t\toriginal sample: "; 
+
+                    for ( unsigned i = 0; i < 4; ++i)
+                    {
+                        std::cout << v[i] << ",";
+                    }
+                    std::cout << std::endl; 
+                    
+
+
+                    std::cout << "\tcomparing some elements: " << std::endl << "\t\tifft sample: "; 
+
+                    for ( unsigned i = 0; i < 4; ++i)
+                    {
+                        std::cout << results[i] << ",";
+                    }
+                    std::cout << std::endl; 
+                    
+            }
+
         }
+
 
 
     }

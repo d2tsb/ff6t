@@ -1,5 +1,4 @@
 #include "defines.h"
-#include "stopwatch.h"
 /* operations in modular space
 
 
@@ -219,7 +218,7 @@ void testmodinverse(const int iterations = 100000)
 
 numtype modulo2(numtype a)
 {
-    (a & 1);
+    return (a & 1);
 }
 
 numtype itbinarygcd(numtype x, numtype y)

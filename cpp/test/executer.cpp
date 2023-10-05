@@ -193,7 +193,7 @@ int main()
 {
     // Stopwatch sw; 
     // sw.start();
-    // execute_arr_cooleytuckey_fft();
+    execute_vec_cooleytuckey_fft();
     // sw.finish();
     // sw.print_duration_in_milliseconds(); 
 
@@ -205,6 +205,9 @@ int main()
     //testinverse(2);
     //execute_convolution_recursive_multiplication_via_fft(); 
     execute_vec_cooleytuckey_fft_iterative();
+
+
+    cooleytukey::iterative::vec::benchmark(24);
     //powmod_recurcive_test();
     //testGcdAndBinaryGcd(); 
     //testmodinverse(5000000); 
