@@ -207,11 +207,13 @@ int main()
     //execute_vec_cooleytuckey_fft_iterative();
 
 
-    cooleytukey::iterative::farr::benchmark(22);
+    cooleytukey::iterative::farr::benchmark(24);
+    cooleytukey::iterative::vec::benchmark(24);
     //powmod_recurcive_test();
     //testGcdAndBinaryGcd(); 
     //testmodinverse(5000000); 
-    //gcdrace(5000000);
+    //gcdrace(5000000);:w
+
     
     //testbitreverse(5);
 }

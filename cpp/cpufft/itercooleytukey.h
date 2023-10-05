@@ -155,19 +155,21 @@ namespace cooleytukey{
 
                     Stopwatch sw; 
                     sw.reset(); 
+
+                    std::cout << "\telapsed time for cooleytukey::iterative::vec::fft with " << (1 << order) << " elements: "; 
                     sw.start(); 
                     std::vector<std::complex<double>> twiddles = cooleytukey::iterative::vec::fft(values);
                     sw.finish(); 
-                    std::cout << "\telapsed time for cooleytukey::iterative::vec::fft with " << (1 << order) << " elements: "; 
                     sw.print_duration_in_milliseconds(); 
                     std::cout << std::endl; 
 
 
                     sw.reset(); 
+
+                    std::cout << "\telapsed time for cooleytukey::iterative::vec::ifft with " << (1 << order) << " elements: "; 
                     sw.start(); 
                     std::vector<std::complex<double>> results = cooleytukey::iterative::vec::ifft(twiddles);
                     sw.finish(); 
-                    std::cout << "\telapsed time for cooleytukey::iterative::vec::ifft with " << (1 << order) << " elements: "; 
                     sw.print_duration_in_milliseconds(); 
                     std::cout << std::endl; 
 
@@ -188,6 +190,7 @@ namespace cooleytukey{
                         std::cout << results[i] << ",";
                     }
                     std::cout << std::endl; 
+                    delete [] v; 
                     
             }
 
@@ -198,7 +201,7 @@ namespace cooleytukey{
         {
             //full array ( operations on malloc )
             std::complex<double> * fft 
-            (std::complex<double> * c, const unsigned N_SIZE)
+            (std::complex<double> const * c, const unsigned N_SIZE)
             {
                 if ( IsPowerOfTwo(N_SIZE))
                 {
@@ -214,22 +217,25 @@ namespace cooleytukey{
                     //     std::cout << r[i] << ","; 
                     // std::cout << std::endl;
 
+                    delete [] c;
+
                     //perform iterative fft
                     unsigned Partitionsize = 2; //2
                     for (unsigned i = 0; i < o; i++)
                     {
-                        std::complex<double> ur = k_nth_root(1,Partitionsize);
+                        const std::complex<double> ur = k_nth_root(1,Partitionsize);
+                        const unsigned Partitionsize_half = Partitionsize >> 1; 
                         for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
                             {
                                 std::complex<double> multiplier(1,0); 
                                 //extract uneven and even
-                                for(unsigned k=0; k<Partitionsize/2; k++)  //2
+                                for(unsigned k=0; k<Partitionsize_half; k++)  //2
                                 {
 
-                                    std::complex<double> t = multiplier * r[Partition + k + Partitionsize/2];
-                                    std::complex<double> u = r[Partition + k];
+                                    const std::complex<double> t = multiplier * r[Partition + k + Partitionsize_half];
+                                    const std::complex<double> u = r[Partition + k];
                                     r[k+Partition] = u + t;  
-                                    r[k+Partition+Partitionsize/2] = u - t; 
+                                    r[k+Partition+Partitionsize_half] = u - t; 
                                     multiplier *= ur; 
                                     
                                 }
@@ -237,7 +243,6 @@ namespace cooleytukey{
                                                             
                         Partitionsize<<=1;
                     }
-                    delete [] c; 
                     return r; 
 
                 }
@@ -249,7 +254,7 @@ namespace cooleytukey{
             }
 
         std::complex<double> * ifft
-                (std::complex<double> * c, unsigned N_SIZE)
+                (std::complex<double> const * c, const unsigned N_SIZE)
                 {
                     if ( IsPowerOfTwo(N_SIZE))
                     {
@@ -266,18 +271,19 @@ namespace cooleytukey{
                         for (unsigned i = 0; i < o; i++)
                         {
 
-                            std::complex<double> ur = inverse_k_nth_root(1,Partitionsize);
-                                for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
+                            const std::complex<double> ur = inverse_k_nth_root(1,Partitionsize);
+                            const unsigned Paritionsize_half = Partitionsize >> 1; 
+                            for (unsigned Partition = 0; Partition<N_SIZE; Partition+= Partitionsize )
                                     {
                                         std::complex<double> multiplier(1,0);  //twiddle
                                         //extract uneven and even
-                                        for(unsigned k=0; k<Partitionsize/2; ++k)  //2
+                                        for(unsigned k=0; k<(Paritionsize_half); ++k)  //2
                                         {
 
-                                            std::complex<double> t = multiplier * r[Partition + k + Partitionsize/2];
-                                            std::complex<double> u = r[Partition + k];
+                                            const std::complex<double> t = multiplier * r[Partition + k + (Paritionsize_half)];
+                                            const std::complex<double> u = r[Partition + k];
                                             r[k+Partition] = u + t;  
-                                            r[k+Partition+Partitionsize/2] = u - t; 
+                                            r[k+Partition+(Paritionsize_half)] = u - t; 
                                             multiplier *= ur; 
                                             
                                         }
@@ -287,9 +293,10 @@ namespace cooleytukey{
                         }
 
 
+                        const std::complex<double> inv = 1. / N_SIZE; 
                         for (unsigned i = 0; i < N_SIZE; i++)
                         {
-                            r[i] /= N_SIZE; 
+                            r[i] *= inv; 
                         }
                         return r;
                     }
@@ -319,19 +326,20 @@ namespace cooleytukey{
 
                     Stopwatch sw; 
                     sw.reset(); 
+                    std::cout << "\telapsed time for cooleytukey::iterative::farr::fft with " << (1 << order) << " elements: "; 
                     sw.start(); 
                     v = cooleytukey::iterative::farr::fft(v, 1 << order);
                     sw.finish(); 
-                    std::cout << "\telapsed time for cooleytukey::iterative::farr::fft with " << (1 << order) << " elements: "; 
                     sw.print_duration_in_milliseconds(); 
                     std::cout << std::endl; 
 
 
                     sw.reset(); 
+
+                    std::cout << "\telapsed time for cooleytukey::iterative::farr::ifft with " << (1 << order) << " elements: "; 
                     sw.start(); 
                     v = cooleytukey::iterative::farr::ifft(v, 1 << order);
                     sw.finish(); 
-                    std::cout << "\telapsed time for cooleytukey::iterative::farr::ifft with " << (1 << order) << " elements: "; 
                     sw.print_duration_in_milliseconds(); 
                     std::cout << std::endl; 
 
@@ -350,6 +358,10 @@ namespace cooleytukey{
                         std::cout << v[i] << ",";
                     }
                     std::cout << std::endl; 
+
+
+                    delete[] v;
+                    delete[] original; 
                     
             }
 
