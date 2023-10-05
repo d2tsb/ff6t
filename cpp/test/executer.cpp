@@ -1,46 +1,5 @@
 
 #include "../cpufft/cpufft.h"
-#include <cstdlib>
-#include <ctime>
-#include <chrono>
-
-class Stopwatch 
-{
-    private:
-        std::chrono::_V2::system_clock::time_point start_, finish_; 
-    
-    public: 
-        Stopwatch()
-        {
-            reset(); 
-        }
-        void start () 
-        {
-            this->start_ = std::chrono::high_resolution_clock::now();
-        }
-
-        void finish() 
-        {
-            this->finish_ = std::chrono::high_resolution_clock::now();
-        }
-        void print_duration_in_microseconds()
-        {
-            auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish_ - start_);
-            std::cout << microseconds.count() << "µs\n";
-        }
-        void print_duration_in_milliseconds()
-        {
-            auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(finish_ - start_);
-            std::cout << milliseconds.count() << "ms\n";
-        }
- 
-        void reset () 
-        {
-            std::chrono::_V2::system_clock::time_point now = std::chrono::high_resolution_clock::now();
-            this->start_ = this->finish_ = now; 
-        }
-
-};
 
 void execute_vec_cooleytuckey_fft()
 {
@@ -196,7 +155,7 @@ void testinverse(unsigned order = 4)
     for ( int i = 0; i < ordered.size(); i++)
     {
         //being pedantic
-        bitinserse_indices.push_back(   inverse(ordered[i], order));
+        bitinserse_indices.push_back(  cooleytukey::iterative::bitinverse(ordered[i], order));
     }
     std::cout << std::endl; 
     std::cout << "print bitinversed elements:" << std::endl;
@@ -207,6 +166,26 @@ void testinverse(unsigned order = 4)
 
     
 }
+
+void testbitreverse(const unsigned order)
+{
+    std::cout << "testing bitreverse: " << std::endl; 
+    for ( unsigned i = 0; i < (1 << order); ++i)
+    {
+        std::cout << "\t\tgot " << i << " as: " << int_as_string(i) << std::endl; 
+    }
+    std::cout << "\tnow the corresponding bitreverse:" << std::endl;
+    for ( unsigned i = 0; i < (1 << order); ++i)
+    {
+        std::cout << "\t\tgot " << i << " reversed (" << cooleytukey::iterative::bitreverse(i,order)\
+        << ") as: " << int_as_string(cooleytukey::iterative::bitreverse(i, order)) << std::endl; 
+
+    }
+
+}
+
+
+
 
 
 
@@ -224,8 +203,13 @@ int main()
     // sw.finish();
     // sw.print_duration_in_milliseconds(); 
     //testinverse(2);
-    execute_convolution_recursive_multiplication_via_fft(); 
-    //execute_vec_cooleytuckey_fft_iterative();
+    //execute_convolution_recursive_multiplication_via_fft(); 
+    execute_vec_cooleytuckey_fft_iterative();
+    //powmod_recurcive_test();
+    //testGcdAndBinaryGcd(); 
+    //testmodinverse(5000000); 
+    //gcdrace(5000000);
     
+    //testbitreverse(5);
 }
 

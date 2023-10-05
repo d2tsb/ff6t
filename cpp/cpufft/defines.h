@@ -6,6 +6,9 @@
 #include <array>
 #include <string>
 #include <climits>
+#include <cstdlib>
+#include <ctime>
+#include <chrono>
 
 #pragma once
 #define WRONGSIZE 48
@@ -49,12 +52,7 @@ std::string complex2string(std::complex<double> n)
     return std::to_string( n.real()) + " + " + std::to_string(n.imag()) + "j";
 }
 
-unsigned inverse(unsigned i, short order = ORDER)
-{
-    return 
-    !((UINT_MAX << order) & i) *  //sharp bitinverse
-    (((~i) << ((sizeof(unsigned) << 3) - order)) >> ((sizeof(unsigned) * 8) - order));
-}
+
 std::string int_as_string(unsigned i)
 {
     std::string outcome; 

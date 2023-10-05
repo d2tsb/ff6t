@@ -1,5 +1,6 @@
 
 #include "defines.h"
+#include "modops.h"
 namespace cooleytukey 
     {
   
