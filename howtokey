@@ -1,0 +1,6 @@
+when a private key (file) got received you can validate the originator of this project by generating the corresponding public key with
+
+ssh-keygen -y -f <private key file>
+
+you now can compare (f.ex. by hash) of the generated public key with the public key file 'key.pub' the 
+public key file found in the git repository.

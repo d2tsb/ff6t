@@ -5,12 +5,12 @@
 */
 
 #define numtype int
+#define NO_SUCH_NUMBER_EXCEPTION 49
 
 numtype mod(int a, unsigned m)
 {
     return a % m;
 }
-
 numtype powmod_recursive(const int basis, unsigned exponent, const unsigned m)
 {
     numtype res;
@@ -32,7 +32,6 @@ numtype powmod_recursive(const int basis, unsigned exponent, const unsigned m)
     }
     return res;
 }
-
 numtype iterativePowMod(numtype x, numtype y, numtype p)
 {
 
@@ -51,11 +50,10 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
         y = y >> 1;
 
         // Change x to x^2
-        x = (x * x);
+        x = (x * x) % p;
     }
-    return res % p;
+    return res;
 }
-
 void powmod_recurcive_test()
 {
     std::cout << "Powmod 7**2%50: " << std::to_string(powmod_recursive(7, 2, 50)) << std::endl;
@@ -63,7 +61,6 @@ void powmod_recurcive_test()
     std::cout << "Powmod 8**3%50: " << std::to_string(powmod_recursive(8, 3, 50)) << std::endl;
     std::cout << "Powmod 700**700%11: " << std::to_string(powmod_recursive(700, 700, 11)) << std::endl;
 }
-
 numtype gcd(numtype a, numtype b)
 {
 
@@ -76,22 +73,19 @@ numtype gcd(numtype a, numtype b)
         return gcd(b, a % b);
     }
 }
-
 #define NOINVERSE (numtype) - 90
-
 numtype modInverseWithPowModIT(numtype A, numtype M)
 {
-    if ( gcd (A, M) != 1)
+    if (gcd(A, M) != 1)
         return NOINVERSE;
     return iterativePowMod(A, M - 2, M);
 }
-
 numtype powerModrecursive(numtype x, unsigned numtype y, unsigned numtype M);
 numtype modInverseWithPowMod(numtype A, numtype M)
 { // mod inverse with power
     numtype g = gcd(A, M);
     if (g != 1)
-        return NOINVERSE; //actually it should throw.
+        return NOINVERSE; // actually it should throw.
     else
     {
         // If a and m are relatively prime (gcd(a,m) == 1), then modulo
@@ -99,7 +93,6 @@ numtype modInverseWithPowMod(numtype A, numtype M)
         return powerModrecursive(A, M - 2, M);
     }
 }
-
 numtype modInverseWPMOD_WOT(numtype A, numtype M)
 { // mod inverse with power
     // without any test
@@ -107,9 +100,6 @@ numtype modInverseWPMOD_WOT(numtype A, numtype M)
     //  inverse is a^(m-2) mode m
     return powerModrecursive(A, M - 2, M);
 }
-        
-
-
 numtype modInverseWPMOD_WOT_IT(numtype A, numtype M)
 { // mod inverse with power
     // without any test
@@ -118,7 +108,6 @@ numtype modInverseWPMOD_WOT_IT(numtype A, numtype M)
     return iterativePowMod(A, M - 2, M);
 }
 // To comput
-
 
 // To compute x^y under modulo m
 numtype powerModrecursive(numtype x, unsigned numtype y, unsigned numtype M)
@@ -131,7 +120,6 @@ numtype powerModrecursive(numtype x, unsigned numtype y, unsigned numtype M)
 
     return (y % 2 == 0) ? p : (x * p) % M;
 }
-
 int modInverseIT(int A, int M)
 {
     if (gcd(A, M) != 1)
@@ -164,7 +152,6 @@ int modInverseIT(int A, int M)
 
     return x;
 }
-
 int modInverseWithoutTest(int A, int M)
 {
     int m0 = M;
@@ -195,7 +182,6 @@ int modInverseWithoutTest(int A, int M)
 
     return x;
 }
-
 numtype modInverse(numtype A, numtype M)
 {
     for (int X = 1; X < M; X++)
@@ -203,9 +189,7 @@ numtype modInverse(numtype A, numtype M)
             return X;
     return NOINVERSE;
 }
-
 static void modInverseRace(const int ITERATIONS_RACE, const int);
-
 void testmodinverse(const int iterations = 100000)
 {
 
@@ -215,12 +199,10 @@ void testmodinverse(const int iterations = 100000)
 
     modInverseRace(iterations, 3000000);
 }
-
 numtype modulo2(numtype a)
 {
     return (a & 1);
 }
-
 numtype itbinarygcd(numtype x, numtype y)
 {
     int shl = 0;
@@ -252,7 +234,6 @@ numtype itbinarygcd(numtype x, numtype y)
 
     return !x ? y << shl : x << shl;
 }
-
 numtype binary_gcd(numtype x, numtype y)
 {
 
@@ -320,17 +301,15 @@ numtype binary_gcd(numtype a, numtype b)
     return 0;
 }
 */
-
 static void modInverseRace(const int ITERATIONS_RACE, const int LIMIT)
 {
 
     const int prime = 39916801;
 
-    //int numbers[ITERATIONS_RACE];
-    //int * as = numbers; 
+    // int numbers[ITERATIONS_RACE];
+    // int * as = numbers;
 
-
-    int * as = new int[ ITERATIONS_RACE ]; //using heap
+    int *as = new int[ITERATIONS_RACE]; // using heap
     for (unsigned i = 0; i < ITERATIONS_RACE; i++)
     {
         as[i] = std::rand() % LIMIT;
@@ -384,7 +363,6 @@ static void modInverseRace(const int ITERATIONS_RACE, const int LIMIT)
     sw.finish();
     sw.print_duration_in_milliseconds();
 
-
     sw.reset();
     std::cout << "modinverse with recursive powmod, without gcd test (" << ITERATIONS_RACE << "): ";
     sw.start();
@@ -394,7 +372,6 @@ static void modInverseRace(const int ITERATIONS_RACE, const int LIMIT)
     sw.finish();
     sw.print_duration_in_milliseconds();
 
-
     sw.reset();
     std::cout << "modinverse with iterative powmod, without gcd test (" << ITERATIONS_RACE << "): ";
     sw.start();
@@ -403,18 +380,14 @@ static void modInverseRace(const int ITERATIONS_RACE, const int LIMIT)
     // std::cout << "binarygcd " << a << "," << b << ": " << std::to_string(binary_gcd(a, b)) << std::endl;
     sw.finish();
     sw.print_duration_in_milliseconds();
-
-
-
 }
-
 static void gcdrace(const int ITERATIONS_RACE = 100000)
 {
 
     // int as[ITERATIONS_RACE];
     // int mods[ITERATIONS_RACE];
-    int * as = new numtype[ITERATIONS_RACE]; //using heap
-    int * mods = new numtype[ITERATIONS_RACE]; 
+    int *as = new numtype[ITERATIONS_RACE]; // using heap
+    int *mods = new numtype[ITERATIONS_RACE];
 
     for (unsigned i = 0; i < ITERATIONS_RACE; i++)
     {
@@ -450,7 +423,6 @@ static void gcdrace(const int ITERATIONS_RACE = 100000)
     sw.finish();
     sw.print_duration_in_milliseconds();
 }
-
 void testGcdAndBinaryGcd()
 {
 
@@ -492,3 +464,25 @@ numtype binary_gcd(numtype x, numtype y)
     return gcd((y - x) >> 1, x);
 }
 */
+numtype calculate_primitventhrootofunity(numtype n, numtype modulo)
+{                                   // modulo has to be > 1      gcd ( n, modulo ) have to be atleast 1
+
+
+
+
+    numtype d = gcd(n, modulo - 1); // number of possible solutions for roots of unity in moduloring
+    if (d == 1)
+        throw NO_SUCH_NUMBER_EXCEPTION;
+
+    numtype solution = iterativePowMod(n, (modulo - 1) * modInverseIT(d, modulo), 213);
+    return solution;
+}
+
+
+
+namespace twokmodspace
+{
+    
+
+
+}

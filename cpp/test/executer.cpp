@@ -111,33 +111,137 @@ void execute_vec_cooleytuckey_fft_iterative()
 
 }
 
+void printasfullnumber (std::vector<std::complex<double>> 
+    value
+) 
+{
+    unsigned long res = 0; 
+    for (unsigned i = 0; i < value.size(); i++)
+    {
+        double product = round(std::round(value[i].real()) * std::pow(10, i));
+        res += (long) product; 
+
+
+    }
+    std::cout << std::endl; 
+    std::cout << res << std::endl; 
+
+}
+
+
+
 void execute_convolution_recursive_multiplication_via_fft()
 {
    std::cout << "first example" << std::endl;
+   printasfullnumber(
    cooleytukey::convolution_recursive::multiplication_via_fft(
-    std::vector<double>({  1, 2, 0, 0, 0, 0, 0, 0}),
-    //  std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8}),
-    // std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8})
-    std::vector<double>({  1, 2, 0, 0, 0, 0, 0, 0})
-   );
+    std::vector<double>({  7, 1, 0, 0, 0, 0, 0, 0}),
+    std::vector<double>({  7, 1, 0, 0, 0, 0, 0, 0}) //which is 17
+   )); 
+
    std::cout << std::endl;
    std::cout << "second example" << std::endl;
+   printasfullnumber(
     cooleytukey::convolution_recursive::multiplication_via_fft(
-    std::vector<double>({  1, 2, 3, 4, 0, 0, 0, 0}),
-    //  std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8}),
-    // std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8})
-    std::vector<double>({  5, 6, 7, 8, 0, 0, 0, 0})
-   );
+    std::vector<double>({  4, 1, 0, 0, 0, 0, 0, 0, 
+                            0, 0, 0, 0, 0, 0, 0, 0}),
+    std::vector<double>({  4, 1, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0})
+   ));
 
    std::cout << std::endl;
-   std::cout << "third example" << std::endl;
+   std::cout << "third example (20 * 20 == 400)" << std::endl;
+   printasfullnumber(
     cooleytukey::convolution_recursive::multiplication_via_fft(
-    std::vector<double>({  1, 7, 0, 0, 0, 0, 0, 0}),
-    //  std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8}),
-    // std::vector<double>({  1, 2, 3, 4, 5, 6, 7, 8})
-    std::vector<double>({  1, 7, 0, 0, 0, 0, 0, 0})
-   );
+    std::vector<double>({  0, 2, 0, 0, 0, 0, 0, 0}),
+    std::vector<double>({  0, 2, 0, 0, 0, 0, 0, 0})
+   ));
+   std::cout << std::endl;
+   std::cout << "forth example: (606*606 == 367236) " << std::endl;
+   printasfullnumber(
+    cooleytukey::convolution_recursive::multiplication_via_fft(
+    std::vector<double>({  6, 0, 6, 0, 0, 0, 0, 0}),
+    std::vector<double>({  6, 0, 6, 0, 0, 0, 0, 0})
+   ));
 
+    //actually numerically unstable.
+
+
+
+}
+
+void check_iterative_to_recursive_crosscompatibiliy () 
+{
+
+    std::cout << "Test of iterative to recursive (cross)compatibily" << std::endl;
+    std::vector <double> values = { 1, 2, 3, 4, 5, 6, 7, 8};
+
+    std::cout << "\nrecursive -> iterative:" << std::endl; 
+    std::cout << "recursive::vec::fft" << std::endl; 
+    auto res = cooleytukey::recursive::vec::fft(values); 
+    std::cout << "iterative::vec::ifft" << std::endl; 
+    auto inverted = cooleytukey::iterative::vec::ifft(res); 
+    std::cout << "\n got: "<< std::endl; 
+    for (unsigned i = 0; i < inverted.size(); i++)
+    {
+       std::cout << inverted[i] << ","; 
+    }
+
+    std::cout << "\nnow the other way around. iterative -> recursive" << std::endl; 
+    std::cout << "iterative::vec::fft" << std::endl; 
+    auto res2 = cooleytukey::iterative::vec::fft(values); 
+    std::cout << "iterative::vec::ifft" << std::endl; 
+    auto inverted2 = cooleytukey::recursive::vec::ifft(res2); 
+    std::cout << "\n got: "<< std::endl; 
+    for (unsigned i = 0; i < inverted2.size(); i++)
+    {
+       std::cout << inverted2[i] << ","; 
+    }
+
+    std::cout << std::endl; 
+    std::cout << "test done." << std::endl; 
+}
+
+
+
+void execute_dft_ntt337 () 
+{
+
+
+    srand(time(NULL));
+    unsigned size = 8;  
+    std::vector < unsigned > v; 
+    std::cout << std::endl; 
+    std::cout << "testing dft::ntt337::ntt(number theortical transform) && intt of size(8): " << std::endl << "\tgot original: "; 
+    for ( unsigned i = 0;   i<size;   i++)
+    {
+       v.push_back(rand() % 10);  //since the the maximum product of the coefficients need to be inside Z/337Z  and 10*10*log(10) is ruffly 200 as maximum product
+       //v.push_back(i);
+       std::cout << v[i] << ", "; 
+    }
+    std::cout << std::endl; 
+    std::cout << std::endl; 
+
+    v = dft::ntt337::ntt(v);
+    std::cout << "\twith coefficients (after ntt): ";
+    for ( unsigned i = 0;   i<size;   i++)
+    {
+       std::cout << v[i] << ", "; 
+    }
+    
+    std::cout << std::endl; 
+    std::cout << std::endl; 
+
+    v = dft::ntt337::intt(v);
+    std::cout << "\tand inverse (intt): ";
+    for ( unsigned i = 0;   i<size;   i++)
+    {
+       std::cout << v[i] << ", "; 
+    }
+   
+ 
+    std::cout << std::endl; 
+    std::cout << std::endl; 
 
 
 }
@@ -203,12 +307,19 @@ int main()
     // sw.finish();
     // sw.print_duration_in_milliseconds(); 
     //testinverse(2);
+    
+
+
     //execute_convolution_recursive_multiplication_via_fft(); 
+
+
+
     //execute_vec_cooleytuckey_fft_iterative();
+    //check_iterative_to_recursive_crosscompatibiliy(); 
+    execute_dft_ntt337(); 
 
-
-    cooleytukey::iterative::farr::benchmark(24);
-    cooleytukey::iterative::vec::benchmark(24);
+    //cooleytukey::iterative::farr::benchmark(24);
+    //cooleytukey::iterative::vec::benchmark(24);
     //powmod_recurcive_test();
     //testGcdAndBinaryGcd(); 
     //testmodinverse(5000000); 

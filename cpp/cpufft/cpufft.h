@@ -1,4 +1,4 @@
 
 #include "cooleytukeyrec.h"
 #include "itercooleytukey.h"
-#include "modcooleytukey.h"
+#include "ntt.h"
