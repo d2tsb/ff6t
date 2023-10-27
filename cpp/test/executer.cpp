@@ -289,6 +289,53 @@ void testbitreverse(const unsigned order)
 }
 
 
+void execute_dft_modspace2k () 
+{
+
+
+    srand(time(NULL));
+    unsigned order = 8; 
+
+    //unsigned size = 1 << (order-1);  which is not prime, so it does no really work
+    unsigned size = order*2; //make 2 order*2 nth root of unity in gf(2**n  + 1) 
+    //2**8 + 1 is the last fermat prime
+    std::vector < unsigned > v; 
+    std::cout << std::endl; 
+    std::cout << "testing dft::modspace2k::ntt(number theortical transform) && intt of size(8): " << std::endl << "\tgot original: "; 
+    for ( unsigned i = 0;   i<size;   i++)
+    {
+       v.push_back(rand() % 3);  //since the the maximum product of the coefficients need to be inside Z/337Z  and 10*10*log(10) is ruffly 200 as maximum product
+       //v.push_back(i);
+       std::cout << v[i] << ", "; 
+    }
+    std::cout << std::endl; 
+    std::cout << std::endl; 
+
+    v = dft::modspace2k::ntt(v, order, 1);
+    std::cout << "\twith coefficients (after ntt): ";
+    for ( unsigned i = 0;   i<size;   i++)
+    {
+       std::cout << v[i] << ", "; 
+    }
+    
+    std::cout << std::endl; 
+    std::cout << std::endl; 
+
+    v = dft::modspace2k::intt(v, order, 1);
+    std::cout << "\tand inverse (intt): ";
+    for ( unsigned i = 0;   i<size;   i++)
+    {
+       std::cout << v[i] << ", "; 
+    }
+   
+ 
+    std::cout << std::endl; 
+    std::cout << std::endl; 
+
+
+}
+
+
 
 
 
@@ -308,7 +355,7 @@ int main()
     // sw.print_duration_in_milliseconds(); 
     //testinverse(2);
     
-
+    
 
     //execute_convolution_recursive_multiplication_via_fft(); 
 
@@ -316,7 +363,11 @@ int main()
 
     //execute_vec_cooleytuckey_fft_iterative();
     //check_iterative_to_recursive_crosscompatibiliy(); 
-    execute_dft_ntt337(); 
+    //execute_dft_ntt337(); 
+
+    spacepow2_k::executetestofurtest(); 
+    execute_dft_modspace2k();  
+
 
     //cooleytukey::iterative::farr::benchmark(24);
     //cooleytukey::iterative::vec::benchmark(24);

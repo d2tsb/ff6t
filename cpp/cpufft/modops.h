@@ -480,9 +480,59 @@ numtype calculate_primitventhrootofunity(numtype n, numtype modulo)
 
 
 
-namespace twokmodspace
+
+
+
+namespace spacepow2_k
 {
-    
+    uint32_t cyclicshftl32 (uint32_t value, unsigned int count) {
+        const unsigned int mask = CHAR_BIT * sizeof(value) - 1;
+        count &= mask;
+        return (value << count) | (value >> (-count & mask));
+    }
+
+    uint32_t cyclicshftr32 (uint32_t value, unsigned int count) {
+        const unsigned int mask = CHAR_BIT * sizeof(value) - 1;
+        count &= mask;
+        return (value >> count) | (value << (-count & mask));
+    }
+
+
+    bool check_unit_root_property_in_2_space(int lot = 0, unsigned order = 8) 
+    {
+        unsigned zeuge = 0; 
+        unsigned long modspace = (1 << order) + lot; 
+        for ( unsigned l = 1; l < modspace; l++)
+        {
+            for (unsigned k = 0; k < modspace; k++)
+            {
+                zeuge += iterativePowMod(2, k*l, modspace);
+                zeuge %= modspace; 
+            }
+
+        }
+        return zeuge == 0;
+    }
+    void executetestofurtest() 
+    {
+        std::cout << "execute ur == 2 test for pow(2,8) + 1 mod space: " << std::endl; 
+        std::cout << std::endl; 
+
+        std::cout << "\tresult: " << (check_unit_root_property_in_2_space(1, 8) ? "true" : "false") << std::endl;  
+        std::cout << "execute ur == 2 test for pow(2,8) - 1 mod space: " << std::endl; 
+        std::cout << std::endl; 
+        std::cout << "\tresult: " << (check_unit_root_property_in_2_space(-1, 8) ? "true" : "false") << std::endl;  
+
+
+
+    }
+
+     
+
+
+    typedef unsigned long p2numtype; 
+    constexpr p2numtype m2 = 65537<<1;     
+    p2numtype m = 65537;     
 
 
 }
