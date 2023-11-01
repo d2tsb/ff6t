@@ -3,12 +3,12 @@
 #### Description
 everything around the (fast) fourier transform implemented in c++
 
-it's a bunch of headers which implement the following things:
+it's a bunch of headers which implement the all the checked features list bellow.
 
 
 #### Features
                 
-+ modops
++ modops ✅
     + modinverse
          + iterative
 		 + recursive
@@ -23,9 +23,9 @@ it's a bunch of headers which implement the following things:
 	+ modulo2
                 
 + dct (I-VIII)
-+ fft cooleytukey
-		+ iterative
-		+ recursive
++ fft cooleytukey (for different datastructures std::vector, std::array, full array)
+		+ iterative ✅
+		+ recursive ✅
 	+ winograd
 	+ pfft
 	+ bluestein
@@ -37,9 +37,9 @@ it's a bunch of headers which implement the following things:
    	+ functional: reindexing and bitinverse function
 + ntt
 	+ dft
- 		+ dft337 as example
+ 		+ dft337 as example ✅
    	+ general dft over 2 related modspace (fermat- or mersenne-prime space)
-   	+ cooleytukey
+   	+ cooleytukey in modspace
    		+ iterative
    	 	+ recursive
 + threaded ffts
@@ -47,7 +47,7 @@ it's a bunch of headers which implement the following things:
   	+ for all ffts
   	+ gpu implementation
 + big number library
-+ speedtests:
++ speedtests ✅:
 	+ gcdrace
  	+ modInverseRace
   	+ powmodrace 
