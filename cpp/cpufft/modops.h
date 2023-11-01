@@ -44,7 +44,7 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
 
         // If y is odd, multiply x with result
         if (y % 2 == 1)
-            res = (res * x);
+            res = (res%p) * (x%p);
 
         // y = y/2
         y = y >> 1;

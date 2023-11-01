@@ -405,10 +405,10 @@ int main()
 
     //execute_vec_cooleytuckey_fft_iterative();
     //check_iterative_to_recursive_crosscompatibiliy(); 
-    //execute_dft_ntt337(); 
+    execute_dft_ntt337(); 
 
-    spacepow2_k::executetestofurtest(); 
-    execute_dft_modspace2k();  
+    //spacepow2_k::executetestofurtest(); 
+    //execute_dft_modspace2k();  
 
 
     //cooleytukey::iterative::farr::benchmark(24);
