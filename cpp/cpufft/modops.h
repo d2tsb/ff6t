@@ -50,7 +50,7 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
         y = y >> 1;
 
         // Change x to x^2
-        x = (x * x) % p;
+        x = (x % p) * (x % p);
     }
     return (numtype) res;
 }
