@@ -20,7 +20,7 @@ modops
 dct (I-VII)
 
 
-fft cooleytuckey
+fft cooleytukey
         iterative   
         recursive
     winograd
@@ -40,16 +40,16 @@ ntt
         dft337 as example
         general dft in power of 2 modspace
 
-    cooleytuckey
+    cooleytukey
         iterative
         recursive
 
         
 
 threaded ffts
-    all ntts 
-    all cooleytuckeys
-    using gpu
+    for all implemented ffts
+    for all implemented dfts
+    gpu implementation
 
 
 big number library
