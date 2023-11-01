@@ -3,21 +3,21 @@ everything around the (fast) fourier transform implemented in c++
 
 
 modops
-    modInverse
-        iterative
-        recursive
-    powmod
-        iterative
-        recursive
-    gcd
-        binary 
-        direct 
-        ..
+modInverse
+    iterative
+    recursive
+powmod
+    iterative
+    recursive
+gcd
+    binary 
+    direct 
+    ..
 
-    calculate/find primitive root 
-    calculate unit root
+calculate/find primitive root 
+calculate unit root
 
-    modulo2
+modulo2
 
 
 dct (I-VII)
@@ -31,10 +31,10 @@ fft cooleytuckey
     bluestein
     chirp-z
 
-    dct (discrete cosine transform I-VII) as mod fft
-    dst (discrete sine transform) as mod fft
+dct (discrete cosine transform I-VII) as mod fft
+dst (discrete sine transform) as mod fft
 
-    functional: reindexing and bitinverse function
+functional: reindexing and bitinverse function
 
 
 
