@@ -1,12 +1,12 @@
 # ff6t
 
-##Description
+#### Description
 everything around the (fast) fourier transform implemented in c++
 
 it's a bunch of headers which implement the following things:
 
 
-###Features
+#### Features
                 
 + modops
     + modinverse
