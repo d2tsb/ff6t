@@ -36,7 +36,7 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
 {
 
     // Initialize answer
-    numtype res = 1;
+    unsigned long res = 1;
 
     // Check till the number becomes zero
     while (y > 0)
@@ -52,7 +52,7 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
         // Change x to x^2
         x = (x * x) % p;
     }
-    return res;
+    return (numtype) res;
 }
 void powmod_recurcive_test()
 {

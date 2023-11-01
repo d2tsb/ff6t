@@ -102,9 +102,9 @@ namespace dft
                 numtype res = 0; 
                 for ( unsigned j = 0;  j < v_temp.size(); j++)
                 {
-                    res = (res + (v_temp[j] * iterativePowMod(ur, 
+                    res = ((unsigned long) res + (unsigned long)((  (unsigned long)v_temp[j] *  (unsigned long)iterativePowMod(ur, 
                                                         j * k,
-                                                        m)) ) %m;
+                                                        m)) % m) ) %m;
 
                     VERBOSE(verbose)
                     WRAP(
@@ -115,7 +115,7 @@ namespace dft
                     WRAP(
                     std::cout <<"k is :" << k << std::endl; 
                     )
-                v[k] = res; 
+                v[k] = (numtype) res; 
             }
             return std::vector<unsigned> (v);
             //with time complexity n^2
@@ -142,7 +142,7 @@ namespace dft
                 for ( unsigned j = 0;  j < length; j++)
                 {
 
-                    res = (res + v_temp[j] * modInverseIT (iterativePowMod(ur,j*k, m), m))
+                    res = (unsigned)((unsigned long) res + (unsigned long)((unsigned long)v_temp[j] * (unsigned long) modInverseIT (iterativePowMod(ur,j*k, m), m) % m))
                                                     %m;
                     
 
@@ -153,7 +153,7 @@ namespace dft
                     VERBOSE(verbose)
                     WRAP(
                 std::cout <<"k is :" << k << std::endl; )
-                v[k] = res; 
+                v[k] = (unsigned) res; 
             }
 
                 VERBOSE(verbose)
@@ -164,7 +164,7 @@ namespace dft
             for ( unsigned t = 0;  t < v_temp.size(); t++)
             {
 
-                v[t] = (m_inverse * v[t]) % m;
+                v[t] = (unsigned)((unsigned long)m_inverse * (unsigned long)(v[t] % m)) % m;
                 VERBOSE(verbose)
                 WRAP(
                 std::cout <<"temp_inv * n^(-1) is :" << v[t] << std::endl; 
