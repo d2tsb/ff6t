@@ -23,7 +23,8 @@ it's a bunch of headers which implement the all the checked features list bellow
 	+ modulo2
                 
 + dct (I-VIII)
-+ fft cooleytukey
++ fft
+	+ cooleytukey for different datastructures
   		+ iterative ✅
 		+ recursive ✅
 	+ winograd
