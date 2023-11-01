@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/Programmer/Programme/dev_/gitp/projects/exce/algorithms/research/fft/cpp/test",
-      "program": "c:/Users/Programmer/Programme/dev_/gitp/projects/exce/algorithms/research/fft/cpp/test/build/Debug/outDebug",
+      "cwd": "c:/Users/Programmer/Programme/d2tsb/public/fft/cpp/test",
+      "program": "c:/Users/Programmer/Programme/d2tsb/public/fft/cpp/test/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "C:/MinGW/bin/gdb.exe",
       "setupCommands": [

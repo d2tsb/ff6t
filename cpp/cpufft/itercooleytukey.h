@@ -4,7 +4,7 @@ namespace cooleytukey{
     namespace iterative
 
     {
-        unsigned bitreversechar(unsigned i, short order = ORDER)
+        unsigned bitreversechar(unsigned i)
         {
             return i = (i * 0x0202020202ULL & 0x010884422010ULL) % 1023;
 
