@@ -49,14 +49,16 @@ Note: all the not checked need to be done.
   	+ for all ffts
   	+ gpu implementation
 + big number library
-+ speedtests ✅:
++ speedtests ✅
 	+ gcdrace
  	+ modInverseRace
   	+ powmodrace 
   	  
 
-    dct (discrete cosine transform I-VII) as mod fft
-    dst (discrete sine transform) as mod fft
++ dct (discrete cosine transform I-VII) as mod fft
++ dst (discrete sine transform) as mod fft
 
-    functional: reindexing and bitinverse function
++ functional
+	+ reindexing
+ 	+ bitinverse function
 
