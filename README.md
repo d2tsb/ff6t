@@ -24,6 +24,37 @@ it's a bunch of headers which implement the following things:
                 
 + dct (I-VIII)
 + fft cooleytukey
-	+ iterative
-	+ recursive
+		+ iterative
+		+ recursive
+	+ winograd
+	+ pfft
+	+ bluestein
+   	+ chirp-z
+ 
+   	+ dct (discrete cosine transform I-VII) as mod fft
+   	+ dst (discrete sine transform as mod fft
+ 
+   	+ functional: reindexing and bitinverse function
++ ntt
+	+ dft
+ 		+ dft337 as example
+   	+ general dft over 2 related modspace (fermat- or mersenne-prime space)
+   	+ cooleytukey
+   		+ iterative
+   	 	+ recursive
++ threaded ffts
+  	+ for all dfts
+  	+ for all ffts
+  	+ gpu implementation
++ big number library
++ speedtests:
+	+ gcdrace
+ 	+ modInverseRace
+  	+ powmodrace 
+  	  
+
+    dct (discrete cosine transform I-VII) as mod fft
+    dst (discrete sine transform) as mod fft
+
+    functional: reindexing and bitinverse function
 
