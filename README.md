@@ -2,10 +2,8 @@
 
 #### Description
 
-everything around the (fast) fourier transform implemented in c++
-
-it's a bunch of headers which implement the all the checked features list bellow.
-
+Everything around the (fast) fourier transform implemented in C++.
+It's a bunch of headers which implement the all the checked features list bellow.
 Note: all the not checked need to be done.
 
 
