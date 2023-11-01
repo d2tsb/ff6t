@@ -10,22 +10,22 @@ Note: all the not checked need to be done.
 #### Features
                 
 + modops ✅
-    + modinverse
-         + iterative
-		 + recursive
-    + powmod
-         + iterative
-		 + recursive
-    + gcd
-         + binary
-		 + direct
-    + calculate/find primitive root
-	+ calculate unit root
-	+ modulo2
+    + modinverse ✅
+         + iterative ✅
+		 + recursive ✅
+    + powmod ✅
+         + iterative ✅
+		 + recursive ✅
+    + gcd ✅
+         + binary ✅
+		 + direct ✅
+    + calculate/find primitive root ✅
+	+ calculate unit root ✅
+	+ modulo2 ✅
                 
 + dct (I-VIII)
 + fft
-	+ cooleytukey for different datastructures
+	+ cooleytukey for different datastructures ✅
   		+ iterative ✅
 		+ recursive ✅
 	+ winograd
@@ -50,9 +50,9 @@ Note: all the not checked need to be done.
   	+ gpu implementation
 + big number library
 + speedtests ✅
-	+ gcdrace
- 	+ modInverseRace
-  	+ powmodrace 
+	+ gcdrace ✅
+ 	+ modInverseRace ✅
+  	+ powmodrace ✅
   	  
 
 + dct (discrete cosine transform I-VII) as mod fft
