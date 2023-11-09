@@ -4,8 +4,29 @@
 
 */
 
-#define numtype int
+#define numtype int64_t
 #define NO_SUCH_NUMBER_EXCEPTION 49
+
+numtype mulmod(numtype a, numtype b, numtype mod)
+{
+    numtype res = 0; // Initialize result
+    a = a % mod;
+    while (b > 0)
+    {
+        // If b is odd, add 'a' to result
+        if (b % 2 == 1)
+            res = (res + a) % mod;
+        // Multiply 'a' with 2
+        a = (a * 2) % mod;
+        // Divide b by 2
+        b /= 2;
+    }
+ 
+    // Return result
+    return res % mod;
+}
+ 
+
 
 numtype mod(int a, unsigned m)
 {
@@ -21,14 +42,14 @@ numtype powmod_recursive(const int basis, unsigned exponent, const unsigned m)
     else if (exponent == 1)
     {
 
-        res = basis;
+        res = basis % m;
     }
     else
     {
         res = powmod_recursive(basis, exponent >> 1, m);
-        res = (res * res) % m;
+        res = ((res % m) * (res % m)) % m; 
         if (exponent % 2)
-            res = res * basis % m;
+            res = ((res % m) * (basis % m)) % m;
     }
     return res;
 }
@@ -36,7 +57,7 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
 {
 
     // Initialize answer
-    unsigned long res = 1;
+    numtype res = 1;
 
     // Check till the number becomes zero
     while (y > 0)
@@ -44,13 +65,13 @@ numtype iterativePowMod(numtype x, numtype y, numtype p)
 
         // If y is odd, multiply x with result
         if (y % 2 == 1)
-            res = (res%p) * (x%p);
+            res = ((res%p) * (x%p))% p;
 
         // y = y/2
         y = y >> 1;
 
         // Change x to x^2
-        x = (x % p) * (x % p);
+        x = (x * x) % p;
     }
     return (numtype) res;
 }
@@ -80,7 +101,7 @@ numtype modInverseWithPowModIT(numtype A, numtype M)
         return NOINVERSE;
     return iterativePowMod(A, M - 2, M);
 }
-numtype powerModrecursive(numtype x, unsigned numtype y, unsigned numtype M);
+numtype powerModrecursive(numtype x,  numtype y,  numtype M);
 numtype modInverseWithPowMod(numtype A, numtype M)
 { // mod inverse with power
     numtype g = gcd(A, M);
@@ -90,7 +111,7 @@ numtype modInverseWithPowMod(numtype A, numtype M)
     {
         // If a and m are relatively prime (gcd(a,m) == 1), then modulo
         // inverse is a^(m-2) mode m
-        return powerModrecursive(A, M - 2, M);
+        return iterativePowMod(A, M - 2, M);
     }
 }
 numtype modInverseWPMOD_WOT(numtype A, numtype M)
@@ -110,15 +131,15 @@ numtype modInverseWPMOD_WOT_IT(numtype A, numtype M)
 // To comput
 
 // To compute x^y under modulo m
-numtype powerModrecursive(numtype x, unsigned numtype y, unsigned numtype M)
+numtype powerModrecursive(numtype x,  numtype y,  numtype M)
 {
     if (y == 0)
         return 1;
 
     numtype p = powerModrecursive(x, y / 2, M) % M;
-    p = (p * p) % M;
+    p = ((p % M) * (p % M)) % M;
 
-    return (y % 2 == 0) ? p : (x * p) % M;
+    return (y % 2 == 0) ? p : ((x%M) * (p%M)) % M;
 }
 int modInverseIT(int A, int M)
 {
@@ -386,8 +407,8 @@ static void gcdrace(const int ITERATIONS_RACE = 100000)
 
     // int as[ITERATIONS_RACE];
     // int mods[ITERATIONS_RACE];
-    int *as = new numtype[ITERATIONS_RACE]; // using heap
-    int *mods = new numtype[ITERATIONS_RACE];
+    numtype *as = new numtype[ITERATIONS_RACE]; // using heap
+    numtype *mods = new numtype[ITERATIONS_RACE];
 
     for (unsigned i = 0; i < ITERATIONS_RACE; i++)
     {
