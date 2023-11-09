@@ -79,6 +79,13 @@ void execute_arr_cooleytuckey_fft()
 }
 
 
+void execute_farr_cooleytuckey_fft(unsigned order)
+{
+    cooleytukey::iterative::farr::benchmark(order , 0);
+}
+
+
+
 void execute_vec_cooleytuckey_fft_iterative()
 {
     std::cout << "Test of (iterative) cooleytuckey::iterative::vec(std::vector)::fft/ifft" << std::endl;
@@ -395,17 +402,18 @@ void execute_dft_modspace2k ()
 
 int main()
 {
-    // Stopwatch sw; 
+    Stopwatch sw; 
     // sw.start();
-    //execute_vec_cooleytuckey_fft();
+    // //execute_vec_cooleytuckey_fft();
     // sw.finish();
     // sw.print_duration_in_milliseconds(); 
 
-    // sw.reset(); 
-    // sw.start();
-    // execute_vec_cooleytuckey_fft();
-    // sw.finish();
-    // sw.print_duration_in_milliseconds(); 
+    sw.reset(); 
+    sw.start();
+    //execute_vec_cooleytuckey_fft();
+    execute_farr_cooleytuckey_fft(20);
+    sw.finish();
+    sw.print_duration_in_milliseconds(); 
     //testinverse(2);
     
     
@@ -419,7 +427,7 @@ int main()
     //execute_dft_ntt337(); 
 
     //spacepow2_k::executetestofurtest(); 
-    execute_dft_modspace2k();  
+    //execute_dft_modspace2k();  
 
 
     //cooleytukey::iterative::farr::benchmark(24);

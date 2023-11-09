@@ -307,11 +307,14 @@ namespace cooleytukey{
 
             }
 
-
-            void benchmark (const unsigned order) 
+#include <cassert>
+            void benchmark (const unsigned order,
+            
+                    const bool test) 
             {
 
                     std::cout << std::endl; 
+
 
                     std::complex<double> *v = new std::complex<double>[1 << order];
                     std::complex<double> *original = new std::complex<double>[1 << order];
@@ -358,6 +361,14 @@ namespace cooleytukey{
                         std::cout << v[i] << ",";
                     }
                     std::cout << std::endl; 
+                    if ( test)
+                    {   
+                        for(int64_t i = 0; i<(1<<order); i++)
+                        {
+                            assert(original[i].real() == v[i].real());
+                        }
+
+                    }
 
 
                     delete[] v;
