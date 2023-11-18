@@ -202,7 +202,8 @@ namespace cooleytukey{
             //full array ( operations on malloc )
             std::complex<double> * fft 
             (std::complex<double> const * c, const unsigned N_SIZE)
-            {
+            { //DISCLAIMER: c is going to be deleted
+
                 if ( IsPowerOfTwo(N_SIZE))
                 {
                     unsigned o = std::log2(N_SIZE);
@@ -255,7 +256,7 @@ namespace cooleytukey{
 
         std::complex<double> * ifft
                 (std::complex<double> const * c, const unsigned N_SIZE)
-                {
+                { //DISCLAIMER: c is going to be deleted
                     if ( IsPowerOfTwo(N_SIZE))
                     {
                         unsigned o = std::log2(N_SIZE); //calculate the order
@@ -332,6 +333,7 @@ namespace cooleytukey{
                     std::cout << "\telapsed time for cooleytukey::iterative::farr::fft with " << (1 << order) << " elements: "; 
                     sw.start(); 
                     v = cooleytukey::iterative::farr::fft(v, 1 << order);
+
                     sw.finish(); 
                     sw.print_duration_in_milliseconds(); 
                     std::cout << std::endl; 
@@ -360,25 +362,177 @@ namespace cooleytukey{
                     {
                         std::cout << v[i] << ",";
                     }
+
+
+                    double error_real = 0, error_imag = 0; 
                     std::cout << std::endl; 
                     if ( test)
                     {   
                         for(int64_t i = 0; i<(1<<order); i++)
                         {
                             assert(original[i].real() == v[i].real());
+                            error_real += std::abs(original[i].real() - v[i].real());
+                            error_imag += std::abs(original[i].imag() - v[i].imag());
                         }
 
                     }
 
-
                     delete[] v;
                     delete[] original; 
                     
+                    std::cout << "terminated with real error: " << error_real << " and imaginary residues: " << error_imag << std::endl; 
+            }
+
+
+            std::complex<double> * const fft_convolution(const unsigned order, 
+                    std::complex<double> * A, std::complex<double> * B )
+                    { //calculates A * B and stores in A.
+                        std::complex<double> * A_ = cooleytukey::iterative::farr::fft(A, 1 << order);
+                        std::complex<double> * B_ = cooleytukey::iterative::farr::fft(B, 1 << order);
+                        for ( unsigned int i = 0; i < (1 << order); i++)
+                        {
+                            A_[i] *= B_[i];
+                        }
+                        delete [] B_; 
+                        return cooleytukey::iterative::farr::ifft(A_, 1 << order);
+                    }
+
+            std::complex<double> * const fft_convolution_without_overflow(const unsigned order, 
+                    std::complex<double> * A, std::complex<double> * B )
+                    { //calculates A * B and stores in A. DISCLAIMER required a (2**(order + 1)) lot more space.
+                        
+                        std::complex<double> * A_ = new std::complex<double>[1 << (order + 1)];
+                        std::copy(A, A + (1<<order), A_);
+                        delete [] A; 
+                        A_ = cooleytukey::iterative::farr::fft(A_, 1 << order); //A_ gets deleted and reassigned.
+
+                        std::complex<double> * B_ = new std::complex<double>[1 << (order + 1)];
+                        std::copy(B, B + (1<<order), B_);
+                        delete [] B; 
+                        B_ = cooleytukey::iterative::farr::fft(B_, 1 << order); //B_ gets deleted and reassigned.
+                        for ( unsigned int i = 0; i < (1 << order); i++)
+                        {
+                            A_[i] *= B_[i];
+                        }
+                        delete [] B_; 
+                        //A = cooleytukey::iterative::farr::ifft(A_, 1 << order); //A_ gets deleted
+                        return cooleytukey::iterative::farr::ifft(A_, 1 << order); //A_ gets deleted
+
+                    }
+
+            void printasfullnumber (std::complex<double>*
+                value,  unsigned order , unsigned base = 10
+            ) 
+            {
+                double res = 0; 
+                for (unsigned i = 0; i < (1 << order); i++)
+                {
+                    double product = round(std::round(value[i].real()) * std::pow(base, i));
+                    res += (long) product; 
+
+                }
+                std::cout << std::endl; 
+                std::cout << res << std::endl; 
+
             }
 
 
 
+            void printasfullfloat (std::complex<double>*
+                value,  unsigned order , unsigned base = 10
+            ) 
+            {
+                double res = 0; 
+                int exponent = -(1<<order - 1); 
+                for (unsigned i = 0; i < (1 << order ); i++)
+                {
+                    double product = round(std::round(value[i].real()) * std::pow(base, exponent));
+                    res += product; 
+                    ++exponent;
 
+                }
+                std::cout << std::endl; 
+                std::cout << res << std::endl; 
+
+            }
+
+            uint64_t approxNumOperationsNewtonRaphsonDivisionFFT(uint64_t dimension, unsigned costOfSimpleMultiplication = 1,
+                            unsigned costOfSimpleAddition = 1)
+            {
+                uint64_t convolution_steps = log2(dimension) * dimension * costOfSimpleMultiplication * costOfSimpleAddition;
+                return log2( dimension ) * (convolution_steps + convolution_steps + dimension) ;
+            }
+            uint64_t approxNumOperationsFFTConvolution(uint64_t dimension, unsigned costOfSimpleMultiplication = 1,
+                            unsigned costOfSimpleAddition = 1)
+            {
+                uint64_t convolution_steps = log2(dimension) * dimension * costOfSimpleAddition * costOfSimpleMultiplication;
+                return convolution_steps;
+            }
+            uint64_t approxNumOperationsFFTConvolutionInC(uint64_t dimension, unsigned costOfSimpleMultiplication = 1,
+                            unsigned costOfSimpleAddition = 1)
+            {
+                uint64_t convolution_steps = log2(dimension * log2(dimension)) * dimension * costOfSimpleAddition * costOfSimpleMultiplication;
+                return convolution_steps;
+            }
+
+            uint64_t approxNumOperationOfSchoolmath(uint64_t dimension, unsigned costOfSimpleMultiplication = 1,
+                            unsigned costOfSimpleAddition = 1)
+                            {
+
+                                //approximates the cost of stereotypical schoolmath multiplication and division. which is O(n**2)
+                                return dimension * dimension * costOfSimpleAddition * costOfSimpleMultiplication; 
+                            }
+
+            void benchmarkfftconvolution(unsigned order, bool verbose)
+            {
+                srand(time(NULL));
+                std::complex<double> * A = new std::complex<double>[1 << order];
+                std::complex<double> * B = new std::complex<double>[1 << order];
+                
+                for ( unsigned i = 0; i<(1 << order-1); i++)
+                {
+                    A[i] = rand() % 2; 
+                    B[i] = rand() % 2; 
+                }
+                for ( unsigned i = (1 << order-1); i<(1 << order); i++)
+                {
+                    A[i] = 0; 
+                    B[i] = 0; 
+                }
+                if ( verbose )
+                {
+                    std::cout << "print some values of A:" << std::endl << "\t "; 
+                    for ( unsigned i = 0; i < ((1 << order) > 10 ? 10 : (1 << order)); i++)
+                        std::cout << A[i] << ", ";
+                    std::cout << std::endl; 
+                    std::cout << "print some values of B:" << std::endl << "\t "; 
+                    for ( unsigned i = 0; i < ((1 << order) > 10 ? 10 : (1 << order)); i++)
+                        std::cout << B[i] << ", ";
+                    std::cout << std::endl; 
+
+                }
+
+                Stopwatch sw; 
+                sw.reset();
+                sw.start();
+                A = fft_convolution(order, A, B);
+                sw.finish();
+
+
+                std::cout << "Approx number of operations: " << approxNumOperationsFFTConvolutionInC((1 << order)); 
+                std::cout << " ..vs stereotypical multiplication: " << approxNumOperationOfSchoolmath((1<<order)) << std::endl; 
+                std::cout << "Time ellapsed for fftconvolution: (sizeof: " << (1 << order) << ")" << std::endl << "\t";
+                sw.print_duration_in_microseconds(); 
+
+                std::cout << "print some values of the convolution:" << std::endl << "\t "; 
+                for ( unsigned i = 0; i < ((1 << order) > 10 ? 10 : (1 << order)); i++)
+                {
+                     std::cout << A[i] << ", ";
+                }
+                //printasfullnumber(A, order, 2);
+
+
+            }
 
 
 

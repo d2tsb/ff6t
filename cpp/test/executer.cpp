@@ -411,12 +411,16 @@ int main()
     sw.reset(); 
     sw.start();
     //execute_vec_cooleytuckey_fft();
-    execute_farr_cooleytuckey_fft(20);
+    //execute_farr_cooleytuckey_fft(22);
     sw.finish();
     sw.print_duration_in_milliseconds(); 
     //testinverse(2);
-    
-    
+    //cooleytukey::iterative::farr::benchmarkfftconvolution(3, 0);
+    //cooleytukey::iterative::farr::benchmarkfftconvolution(15, 0);
+    //cooleytukey::iterative::farr::benchmarkfftconvolution(20, 0);
+    cooleytukey::iterative::farr::benchmarkfftconvolution(22, 0);
+    //cooleytukey::iterative::farr::benchmarkfftconvolution(24, 0);
+
 
     //execute_convolution_recursive_multiplication_via_fft(); 
 
