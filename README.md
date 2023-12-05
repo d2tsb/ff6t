@@ -1,8 +1,9 @@
 # ff6t
 
 #### Description
+Multiply numbers of size ~ 2^1600000 in a couple seconds!
 
-Everything around the (fast) fourier transform implemented in C++.
+Everything around the (fast) fourier transform implemented in C++ - lightweight, for different datastructures.
 It's a bunch of headers which implement the all the checked features list bellow.
 Note: all the not checked need to be done.
 
