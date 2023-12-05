@@ -1,4 +1,9 @@
 
+technical aspects: 
+    use more constness for secure code
+
+
+
 modops
     modInverse
         iterative

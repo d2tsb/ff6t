@@ -411,6 +411,8 @@ int main()
     sw.reset(); 
     sw.start();
     //execute_vec_cooleytuckey_fft();
+    execute_vec_cooleytuckey_fft_iterative();
+    //execute_arr_cooleytuckey_fft();
     //execute_farr_cooleytuckey_fft(22);
     sw.finish();
     sw.print_duration_in_milliseconds(); 
@@ -418,7 +420,7 @@ int main()
     //cooleytukey::iterative::farr::benchmarkfftconvolution(3, 0);
     //cooleytukey::iterative::farr::benchmarkfftconvolution(15, 0);
     //cooleytukey::iterative::farr::benchmarkfftconvolution(20, 0);
-    cooleytukey::iterative::farr::benchmarkfftconvolution(22, 0);
+    //cooleytukey::iterative::farr::benchmarkfftconvolution(22, 0);
     //cooleytukey::iterative::farr::benchmarkfftconvolution(24, 0);
 
 

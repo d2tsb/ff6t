@@ -17,37 +17,18 @@ namespace cooleytukey
                 }
                 else {
 
-                    // if (size == (1 << ORDER))
-                    // {
-                    //     std::cout << std::endl; 
-                    //     for (unsigned i = 0; i < (1<<ORDER); i++)
-                    //     {
-                    //         std::cout << r[i] << "," ;
-            
-                    //         }
-                    //         std::cout<<std::endl; 
-                    // }
-
                     const unsigned n = size; 
                     const unsigned n_half = size>>1; 
 
-                    // for (unsigned i = 0; i < n; i++)
-                    //     {
-                    //         std::cout << r[i] << "," ;
-            
-                    //         }
-                        
-
-
-
-                    std::complex<double> even_indices[n_half];
-                    std::complex<double> odd_indices[n_half];
+                    std::complex<double> *  even_indices = new std::complex<double> [n_half];
+                    std::complex<double> * odd_indices = new std::complex<double> [n_half];
 
                     for (unsigned i = 0; i < n_half; i++)
                     {
                         even_indices[i] = r[i*2]; //assign even indices
                         odd_indices[i] = r[i*2+1]; //assign uneven/odd indices
                     }
+										delete [] r; 
 
                     std::complex<double> * processed_even = fftrecursive(even_indices, n_half);
                     std::complex<double> * processed_odd = fftrecursive(odd_indices, n_half);
@@ -68,7 +49,6 @@ namespace cooleytukey
                     }
                     delete [] processed_even;
                     delete [] processed_odd;
-                    //delete [] r;
 
                     return c; 
 
@@ -88,14 +68,15 @@ namespace cooleytukey
                     const unsigned n = size; 
                     const unsigned n_half = size>>1; 
     
-                    std::complex<double> even_indices[n_half];
-                    std::complex<double> odd_indices[n_half];
+                    std::complex<double> * even_indices = new std::complex<double>[n_half];
+                    std::complex<double> * odd_indices = new std::complex<double>[n_half];
 
                     for (unsigned i = 0; i < n_half; i++)
                     {
                         even_indices[i] = r[i*2];
                         odd_indices[i] = r[(i*2)+1];
                     }
+										delete [] r; 
 
                     std::complex<double> * const processed_even = ifftrecursive(even_indices, n_half);
                     std::complex<double> * const processed_odd = ifftrecursive(odd_indices, n_half);
@@ -133,26 +114,20 @@ namespace cooleytukey
                 {
                     std::cout << r[i] << "," ;
                 }
-                std::cout << std::endl; 
-            
+								/*DEPRECATED
                 std::vector<std::complex<double>> c; 
-                //c.reserve(r.size());
                 for (unsigned i = 0; i < r.size(); i++)
                 {
                     c.push_back(std::complex<double>(r[i]));
-                    //std::cout << complex2string(c[i]) << ","; 
-                }
-                std::complex<double> * result = fftrecursive(c.data(), c.size());
+                }*/
 
-                /*
-                for (unsigned i = 0; i < 10; i++)
-                {
-                    std::cout << result[i] << "," ;
-                }
-                std::cout << std::endl; 
-                */
-            return std::vector<std::complex<double>> (result, result + c.size());
-                
+                std::complex<double> * data = new std::complex<double>[r.size()]; 
+                for (unsigned i = 0; i < r.size(); i++)
+									data[i] = r[i];
+                std::complex<double> * res__ = fftrecursive(data, r.size());
+                std::vector<std::complex<double>> PackedResult(res__, res__ + r.size());
+								delete [] res__; 
+								return PackedResult; 
             }
             else {
 
@@ -168,42 +143,37 @@ namespace cooleytukey
 
         std::vector<std::complex<double>>
         ifft( 
-            std::vector<std::complex<double>> r) {
+            std::vector<std::complex<double>> r, bool verbose = 0) {
             bool ispow2 = IsPowerOfTwo(r.size());
-            if (ispow2)
-            {
-                std::complex<double> * result = ifftrecursive(r.data(), r.size());
-
+            if (ispow2) {
+                std::complex<double> * data = new std::complex<double>[r.size()]; 
+                for (unsigned i = 0; i < r.size(); i++)
+									data[i] = r[i];
+                std::complex<double> * res__ = ifftrecursive(data, r.size());
                 std::complex<double> quotient(r.size(), 0);
                 for ( unsigned i = 0; i < r.size(); i++)
                     {
-                        result[i] /= quotient; 
+                        res__[i] /= quotient; 
                     }
-
-                for (unsigned i = 0; i < STATEMENT; i++)
+                std::vector<std::complex<double>> PackedResult(res__ , res__ + r.size());
+								if (verbose) 
+								{
+										for (unsigned i = 0; i < STATEMENT; i++)
                     {
-                        std::cout << result[i] << "," ;
+                        std::cout << res__[i] << "," ;
                     }
-        
-                std::vector<std::complex<double>> result_v;
-                for ( unsigned i = 0; i < r.size(); i++)
-                    {
-                        result_v.push_back(result[i]);
-                    }
-                return result_v;
+								
+								}
+								delete [] res__;
+								return PackedResult; 
 
             }
             else {
 
                 std::cerr << "Could not process ifft of r since the size of elements is not pow of 2." << std::endl; 
                 throw 48; 
-
-
             }
-
         }
-
-
     }
 
     namespace arr 

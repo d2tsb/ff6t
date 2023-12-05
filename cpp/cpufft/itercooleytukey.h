@@ -332,7 +332,9 @@ namespace cooleytukey{
                     sw.reset(); 
                     std::cout << "\telapsed time for cooleytukey::iterative::farr::fft with " << (1 << order) << " elements: "; 
                     sw.start(); 
+										std::complex<double> * tmp = v; 
                     v = cooleytukey::iterative::farr::fft(v, 1 << order);
+										delete [] tmp; 
 
                     sw.finish(); 
                     sw.print_duration_in_milliseconds(); 
@@ -531,6 +533,7 @@ namespace cooleytukey{
                 }
                 //printasfullnumber(A, order, 2);
 
+								delete [] A; 
 
             }
 
